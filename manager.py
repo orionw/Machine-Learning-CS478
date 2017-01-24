@@ -170,8 +170,8 @@ class MLSystemManager:
                     test_features = Matrix(data, begin, 0, end - begin, data.cols-1)
                     test_labels = Matrix(data, begin, data.cols-1, end - begin, 1)
 
-                    train_features.add(data, end, 0, data.rows - end)
-                    train_labels.add(data, end, data.cols-1, data.rows - end)
+                    train_features.add(data, end, 0, data.cols - 1)
+                    train_labels.add(data, end, data.cols - 1, 1)
 
                     start_time = time.time()
                     learner.train(train_features, train_labels)
