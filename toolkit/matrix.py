@@ -91,12 +91,12 @@ class Matrix:
 
         f = open(filename)
         for line in f.readlines():
-            line = line.rstrip().upper()
+            line = line.rstrip()
             if len(line) > 0 and line[0] != '%':
                 if not reading_data:
-                    if line.startswith("@RELATION"):
+                    if line.lower().startswith("@relation"):
                         self.dataset_name = line[9:].strip()
-                    elif line.startswith("@ATTRIBUTE"):
+                    elif line.lower().startswith("@attribute"):
                         attr_def = line[10:].strip()
                         if attr_def[0] == "'":
                             attr_def = attr_def[1:]
@@ -109,7 +109,7 @@ class Matrix:
 
                         str_to_enum = {}
                         enum_to_str = {}
-                        if not(attr_def == "REAL" or attr_def == "CONTINUOUS" or attr_def == "INTEGER"):
+                        if not(attr_def.lower() == "real" or attr_def.lower() == "continuous" or attr_def.lower() == "integer"):
                             # attribute is discrete
                             assert attr_def[0] == '{' and attr_def[-1] == '}'
                             attr_def = attr_def[1:-1]
@@ -124,7 +124,7 @@ class Matrix:
                         self.enum_to_str.append(enum_to_str)
                         self.str_to_enum.append(str_to_enum)
 
-                    elif line.startswith("@DATA"):
+                    elif line.lower().startswith("@data"):
                         reading_data = True
 
                 else:
