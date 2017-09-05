@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 
 import random
 import numpy as np
+import re
 
 def mode(a, axis=0):
 # taken from scipy code
@@ -103,7 +104,7 @@ class Matrix:
                             attr_name = attr_def[:attr_def.index("'")]
                             attr_def = attr_def[attr_def.index("'")+1:].strip()
                         else:
-                            search = re.search(r'(\w*)\s*({.*})', attr_def)
+                            search = re.search(r'(\w*)\s+({.*}|\w+)', attr_def)
                             attr_name = search.group(1)
                             attr_def = search.group(2)
                             # Remove white space from atribute values
@@ -113,7 +114,7 @@ class Matrix:
 
                         str_to_enum = {}
                         enum_to_str = {}
-                        if not(attr_def.lower() == "real" or attr_def.lower() == "continuous" or attr_def.lower() == "integer"):
+                        if attr_def.lower() not in ("real", "continuous", "integer"):
                             # attribute is discrete
                             assert attr_def[0] == '{' and attr_def[-1] == '}'
                             attr_def = attr_def[1:-1]
