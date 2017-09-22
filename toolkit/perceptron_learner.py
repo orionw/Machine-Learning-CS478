@@ -66,6 +66,7 @@ class PerceptronLearner(SupervisedLearner):
             if np.mod(i, 10) == 0:
                 if np.abs(np.sum(weight(old_w)) - np.sum(weight(self.w))) < .0001:
                     end = False
+                    print(i)
                 old_w = np.copy(self.w)
             i += 1
         return self.w
