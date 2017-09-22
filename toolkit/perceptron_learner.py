@@ -1,9 +1,13 @@
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 
 from supervised_learner import SupervisedLearner
-from matrix import Matrix
 
 import numpy as np
+
+def weight(x):
+    return np.log(np.abs(x))
+
+weight = np.vectorize(weight)
 
 class PerceptronLearner(SupervisedLearner):
     """
@@ -54,8 +58,16 @@ class PerceptronLearner(SupervisedLearner):
         F = np.squeeze(np.asarray(Feat.data))
         F = np.hstack((F, np.ones((Feat.rows, 1))))
         # todo: decide why to stop
-        for i in range(self.num_epochs):
+        end = True
+        i = 0
+        old_w = np.copy(self.w)
+        while end:
             self.w = self.epoch(self.c, F, np.squeeze(np.asarray(l.data)), self.w, Feat.rows)
+            if np.mod(i, 10) == 0:
+                if np.abs(np.sum(weight(old_w)) - np.sum(weight(self.w))) < .0001:
+                    end = False
+                old_w = np.copy(self.w)
+            i += 1
         return self.w
 
 
