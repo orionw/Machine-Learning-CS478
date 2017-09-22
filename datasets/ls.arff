@@ -1,0 +1,20 @@
+% 1. Title: Testing Not Linearly Separable Database
+
+@RELATION nls
+
+@ATTRIBUTE x	Continuous
+@ATTRIBUTE y 	Continuous
+@ATTRIBUTE class 	{class1,class2}
+
+@DATA
+-0.8,0.2,class1
+0.8,-0.2,class2
+-0.5,-0.4,class1
+0.6,0.3,class2
+0.1,-0.2,class1
+0.2,-0.1,class2
+-1.0,-0.1,class1
+1.0,0.8,class2
+%
+%
+%

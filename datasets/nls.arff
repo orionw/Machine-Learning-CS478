@@ -1,0 +1,20 @@
+% 1. Title: Testing Linearly Separable Database
+
+@RELATION ls
+
+@ATTRIBUTE x	Continuous
+@ATTRIBUTE y 	Continuous
+@ATTRIBUTE class 	{class1,class2}
+
+@DATA
+0.3,0.2,class1
+-0.4,0.5,class2
+-0.6,-0.2,class1
+0.7,-0.4,class2
+-0.3,-0.3,class1
+0.9,-0.7,class2
+0.4,0.6,class1
+-0.4,0.7,class2
+%
+%
+%
