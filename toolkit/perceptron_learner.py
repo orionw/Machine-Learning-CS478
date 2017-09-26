@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 
 from supervised_learner import SupervisedLearner
 
-import numpy as np
+import numpy  as np
 
 def weight(x):
     return np.log(np.abs(x))
@@ -57,16 +57,33 @@ class PerceptronLearner(SupervisedLearner):
         self.w = np.random.randn(Feat.cols + 1)
         F = np.squeeze(np.asarray(Feat.data))
         F = np.hstack((F, np.ones((Feat.rows, 1))))
-        # todo: decide why to stop
         end = True
         i = 0
         old_w = np.copy(self.w)
         while end:
             self.w = self.epoch(self.c, F, np.squeeze(np.asarray(l.data)), self.w, Feat.rows)
             if np.mod(i, 10) == 0:
-                if np.abs(np.sum(weight(old_w)) - np.sum(weight(self.w))) < .0001:
+                if np.sum(weight(old_w)) - np.sum(weight(self.w)) < .0001:
                     end = False
-                    print(i)
+                    print("Epochs:", i)
+                    # print("Weights:")
+                    # print(self.w[0])
+                    # print(self.w[1])
+                    # print(self.w[2])
+                    # print(self.w[3])
+                    # print(self.w[4])
+                    # print(self.w[5])
+                    # print(self.w[6])
+                    # print(self.w[7])
+                    # print(self.w[8])
+                    # print(self.w[9])
+                    # print(self.w[10])
+                    # print(self.w[11])
+                    # print(self.w[12])
+                    # print(self.w[13])
+                    # print(self.w[14])
+                    # print(self.w[15])
+
                 old_w = np.copy(self.w)
             i += 1
         return self.w
