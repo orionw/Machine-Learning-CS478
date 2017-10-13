@@ -38,16 +38,16 @@ class BackpropLearner(SupervisedLearner):
         self.w1 = None
         pass
 
-    def train_iteration(self, x, y, out_size=3, len_hidden_layer=5, learning_rate=.001):
+    def train_iteration(self, x, y, out_size=3, len_hidden_layer=5, learning_rate=.01):
         # add the bias
         x = np.append(x, 1).reshape((np.size(x, axis=0) + 1, 1))
         if self.w0 is None:
-            self.w0 = np.random.rand(len_hidden_layer, np.size(x, axis=0))
+            self.w0 = np.random.randn(len_hidden_layer, np.size(x, axis=0))
         net0 = np.matmul(self.w0, x)
         op0 = np.append(o(net0), 1).reshape((len_hidden_layer + 1, 1))
 
         if self.w1 is None:
-            self.w1 = np.random.rand(out_size, np.size(op0, axis=0))
+            self.w1 = np.random.randn(out_size, np.size(op0, axis=0))
         net1 = np.matmul(self.w1, op0)
         op1 = o(net1).reshape((out_size, ))
 
@@ -79,19 +79,19 @@ class BackpropLearner(SupervisedLearner):
         # add the bias
         x = np.append(x, 1).reshape((np.size(x, axis=0) + 1, 1))
         if self.w0 is None:
-            self.w0 = np.random.rand(len_hidden_layer, np.size(x, axis=0))
+            self.w0 = np.random.randn(len_hidden_layer, np.size(x, axis=0))
         net0 = np.matmul(self.w0, x)
         op0 = np.append(o(net0), 1).reshape((len_hidden_layer + 1, 1))
 
         if self.w1 is None:
-            self.w1 = np.random.rand(out_size, np.size(op0, axis=0))
+            self.w1 = np.random.randn(out_size, np.size(op0, axis=0))
         net1 = np.matmul(self.w1, op0)
         op1 = o(net1).reshape((out_size,))
         return np.argmax(op1)
 
     def train(self, f, l):
         """
-        :type F : features Matrix
+        :type f : features Matrix
         :type l : labels Matrix
         """
         f_data = f.data
@@ -116,4 +116,3 @@ class BackpropLearner(SupervisedLearner):
         """
         del l[:]
         l += [self.test_iteration(f)]
-        print(l[0])
