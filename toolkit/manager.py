@@ -1,14 +1,15 @@
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 
-from perceptron_learner import PerceptronLearner
-from supervised_learner import SupervisedLearner
-from baseline_learner import BaselineLearner
-from matrix import Matrix
+from toolkit.supervised_learner import SupervisedLearner
+from toolkit.baseline_learner import BaselineLearner
+from toolkit.perceptron_learner import PerceptronLearner
+from toolkit.multi_perceptron_learner import MultiPerceptronLearner
+from toolkit.backprop_learner import BackpropLearner
+from toolkit.matrix import Matrix
 import random
 import argparse
 import time
 
-from toolkit.multi_perceptron_learner import MultiPerceptronLearner
 
 
 class MLSystemManager:
@@ -28,6 +29,7 @@ class MLSystemManager:
             "baseline": BaselineLearner(),
             "perceptron": PerceptronLearner(),
             "multiperceptron": MultiPerceptronLearner(),
+            "backprop": BackpropLearner()
             #"neuralnet": NeuralNetLearner(),
             #"decisiontree": DecisionTreeLearner(),
             #"knn": InstanceBasedLearner()
@@ -198,7 +200,7 @@ class MLSystemManager:
         parser.add_argument('-V', '--verbose', action='store_true', help='Print the confusion matrix and learner accuracy on individual class values')
         parser.add_argument('-N', '--normalize', action='store_true', help='Use normalized data')
         parser.add_argument('-R', '--seed', help="Random seed") # will give a string
-        parser.add_argument('-L', required=True, choices=['baseline', 'perceptron', "multiperceptron", 'neuralnet', 'decisiontree', 'knn'], help='Learning Algorithm')
+        parser.add_argument('-L', required=True, choices=['baseline', 'perceptron', "multiperceptron", "backprop", 'neuralnet', 'decisiontree', 'knn'], help='Learning Algorithm')
         parser.add_argument('-A', '--arff', metavar='filename', required=True, help='ARFF file')
         parser.add_argument('-E', metavar=('METHOD', 'args'), required=True, nargs='+', help="Evaluation method (training | static <test_ARFF_file> | random <%%_for_training> | cross <num_folds>)")
 
