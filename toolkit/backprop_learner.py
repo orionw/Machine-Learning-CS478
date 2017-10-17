@@ -145,7 +145,7 @@ class BackpropLearner(SupervisedLearner):
         for j in range(10000):
             for i in range(np.size(l_data)):
                 # self.train_iteration(f_data[i], np.array(refactor(l_data[i])), momentum=0.0)
-                self.train_iteration(f_data[i], np.array(refactor(l_data[i])), momentum=0.0, learning_rate=.001,
+                self.train_iteration(f_data[i], np.array(refactor(l_data[i])), momentum=0.3, learning_rate=.001,
                                      out_size=11, len_hidden_layer=80)
             # shuffle the data
             np.random.shuffle(data)
