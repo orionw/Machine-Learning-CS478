@@ -142,10 +142,12 @@ class BackpropLearner(SupervisedLearner):
         acc_v = []
         mse_vs_v = []
         mse_tr_v = []
-        for j in range(10000):
+        mom = 0.7
+        lr = .001
+        for j in range(100000):
             for i in range(np.size(l_data)):
                 # self.train_iteration(f_data[i], np.array(refactor(l_data[i])), momentum=0.0)
-                self.train_iteration(f_data[i], np.array(refactor(l_data[i])), momentum=0.3, learning_rate=.001,
+                self.train_iteration(f_data[i], np.array(refactor(l_data[i])), momentum=mom, learning_rate=lr,
                                      out_size=11, len_hidden_layer=80)
             # shuffle the data
             np.random.shuffle(data)
@@ -178,7 +180,24 @@ class BackpropLearner(SupervisedLearner):
                     k = 0
                 else:
                     k += 1
-                    if k > 20:
+                    if k > 5 and mom == .7:
+                        # lr = .01
+                        mom = .03
+                        k = 0
+                        self.w0 = bssfw0
+                        self.w1 = bssfw1
+                        bssf = 0
+                        print (j)
+                    elif k > 10 and mom == .3:
+                        # lr = .001
+                        mom = 0.0
+                        k = 0
+                        self.w0 = bssfw0
+                        self.w1 = bssfw1
+                        bssf = 0
+                        print (j)
+                    elif k > 25:
+                        print (j)
                         break
         self.w0 = bssfw0
         self.w1 = bssfw1
