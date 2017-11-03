@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 
-from supervised_learner import SupervisedLearner
-from matrix import Matrix
+from toolkit.supervised_learner import SupervisedLearner
+from toolkit.matrix import Matrix
 
 
 class BaselineLearner(SupervisedLearner):
