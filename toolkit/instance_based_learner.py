@@ -4,12 +4,37 @@ from toolkit.supervised_learner import SupervisedLearner
 from toolkit.matrix import Matrix
 import numpy as np
 
+
 def o(x, b):
+    if np.isinf(x) or np.isnan(x):
+        return 1
     if x != 0 and b:
         return 1
     return x
 
 o = np.vectorize(o)
+
+def replace(x, y, z):
+    if x == y:
+        return z
+    return x
+
+replace = np.vectorize(replace)
+
+def replace_nan(x, z):
+    if np.isnan(x):
+        return z
+    return x
+
+replace_nan = np.vectorize(replace_nan)
+
+def replace_inf(x, z):
+    if np.isinf(x):
+        return z
+    return x
+
+replace_inf = np.vectorize(replace_inf)
+
 
 class InstanceBasedLearner(SupervisedLearner):
     """
@@ -45,12 +70,12 @@ class InstanceBasedLearner(SupervisedLearner):
                 self.is_nominal += [True]
         if self.normalization:
             # should do some form of normalization
-            args = np.argmax(features.data, axis=0)
-            for i in range(np.size(args)):
-                self.max_features += [np.array(features.data)[args[i]][i]]
             args = np.argmin(features.data, axis=0)
             for i in range(np.size(args)):
                 self.min_features += [np.array(features.data)[args[i]][i]]
+            args = np.argmax(replace_inf(features.data, float("-inf")), axis=0)
+            for i in range(np.size(args)):
+                self.max_features += [np.array(features.data)[args[i]][i]]
             self.features = (np.array(features.data) - np.array(self.min_features)) / (np.array(self.max_features) -
                                                                                        np.array(self.min_features))
         else:
@@ -62,17 +87,14 @@ class InstanceBasedLearner(SupervisedLearner):
         :type features: [float]
         :type labels: [float]
         """
-
-        for i in range(np.size(features, axis=0)):
-            if self.is_nominal[i]:
-                pass
-
         if self.normalization:
             features = (np.array(features) - np.array(self.min_features)) / (np.array(self.max_features) -
                                                                              np.array(self.min_features))
         features = o(features, self.is_nominal)
 
         f = np.array(self.features) - np.array(features)  # todo: figure out what to do with unknown data
+        f = replace_inf(f, 1)
+        f = replace_nan(f, 1)
         f = np.sum(np.square(f), axis=1)
         k_v = np.argpartition(f, self.k)[:self.k]
         l = 0
@@ -93,6 +115,8 @@ class InstanceBasedLearner(SupervisedLearner):
                 l += self.labels[index][0] / self.k
         if self.classification:
             l = np.round(l)
+        if l == float("nan"):
+            infisnfo = 0
         del labels[:]
         labels += [l]
 
