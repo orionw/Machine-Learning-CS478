@@ -116,7 +116,7 @@ class DecisionTreeLearner(SupervisedLearner):
         for i in range(np.size(data, axis=1) - 1):
             if i not in head_node.path:
                 sol = self.calc_info_var(data, i)
-                if bssf is None or sol < bssf:
+                if bssf is None or sol < bssf:  # todo: what???????
                     bssf = sol
                     bssf_i = i
         if bssf is None:

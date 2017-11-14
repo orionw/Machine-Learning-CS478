@@ -49,7 +49,7 @@ class SupervisedLearner:
         label_values_count = labels.value_count(0)
         if label_values_count == 0:
             # label is continuous
-            pred = []
+            pred = [0]
             sse = 0.0
             for i in range(features.rows):
                 feat = features.row(i)

@@ -6,6 +6,7 @@ from toolkit.perceptron_learner import PerceptronLearner
 from toolkit.multi_perceptron_learner import MultiPerceptronLearner
 from toolkit.backprop_learner import BackpropLearner
 from toolkit.decision_tree_learner import DecisionTreeLearner
+from toolkit.instance_based_learner import InstanceBasedLearner
 from toolkit.matrix import Matrix
 import random
 import argparse
@@ -32,8 +33,8 @@ class MLSystemManager:
             "perceptron": PerceptronLearner(),
             "multiperceptron": MultiPerceptronLearner(),
             "backprop": BackpropLearner(),
-            "decisiontree": DecisionTreeLearner()
-            #"knn": InstanceBasedLearner()
+            "decisiontree": DecisionTreeLearner(),
+            "knn": InstanceBasedLearner()
         }
         if model in modelmap:
             return modelmap[model]
