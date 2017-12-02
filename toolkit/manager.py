@@ -6,17 +6,16 @@ from toolkit.perceptron_learner import PerceptronLearner
 from toolkit.multi_perceptron_learner import MultiPerceptronLearner
 from toolkit.backprop_learner import BackpropLearner
 from toolkit.decision_tree_learner import DecisionTreeLearner
+from toolkit.k_means_cluster_learner import KMeansClusterLearner
+from toolkit.hac_cluster_learner import HACClusterLearner
 from toolkit.instance_based_learner import InstanceBasedLearner
 from toolkit.matrix import Matrix
 import random
 import argparse
 import time
-import matplotlib.pyplot as plt
-
 
 
 class MLSystemManager:
-
     def get_learner(self, model):
         """
         Get an instance of a learner for the given model name.
@@ -34,7 +33,9 @@ class MLSystemManager:
             "multiperceptron": MultiPerceptronLearner(),
             "backprop": BackpropLearner(),
             "decisiontree": DecisionTreeLearner(),
-            "knn": InstanceBasedLearner()
+            "knn": InstanceBasedLearner(),
+            "k_means": KMeansClusterLearner(),
+            "hac": HACClusterLearner()
         }
         if model in modelmap:
             return modelmap[model]
@@ -50,7 +51,7 @@ class MLSystemManager:
         eval_parameter = args.E[1] if len(args.E) > 1 else None
         print_confusion_matrix = args.verbose
         normalize = args.normalize
-        random.seed(args.seed) # Use a seed for deterministic results, if provided (makes debugging easier)
+        random.seed(args.seed)  # Use a seed for deterministic results, if provided (makes debugging easier)
 
         # load the model
         learner = self.get_learner(learner_name)
@@ -73,8 +74,8 @@ class MLSystemManager:
 
             print("Calculating accuracy on training set...")
 
-            features = Matrix(data, 0, 0, data.rows, data.cols-1)
-            labels = Matrix(data, 0, data.cols-1, data.rows, 1)
+            features = Matrix(data, 0, 0, data.rows, data.cols - 1)  # todo: edit here
+            labels = Matrix(data, 0, data.cols - 1, data.rows, 1)
             confusion = Matrix()
             start_time = time.time()
             learner.train(features, labels)
@@ -98,8 +99,8 @@ class MLSystemManager:
 
             print("Test set name: {}".format(eval_parameter))
             print("Number of test instances: {}".format(test_data.rows))
-            features = Matrix(data, 0, 0, data.rows, data.cols-1)
-            labels = Matrix(data, 0, data.cols-1, data.rows, 1)
+            features = Matrix(data, 0, 0, data.rows, data.cols - 1)
+            labels = Matrix(data, 0, data.cols - 1, data.rows, 1)
 
             start_time = time.time()
             learner.train(features, labels)
@@ -109,8 +110,8 @@ class MLSystemManager:
             train_accuracy = learner.measure_accuracy(features, labels)
             print("Training set accuracy: {}".format(train_accuracy))
 
-            test_features = Matrix(test_data, 0, 0, test_data.rows, test_data.cols-1)
-            test_labels = Matrix(test_data, 0, test_data.cols-1, test_data.rows, 1)
+            test_features = Matrix(test_data, 0, 0, test_data.rows, test_data.cols - 1)
+            test_labels = Matrix(test_data, 0, test_data.cols - 1, test_data.rows, 1)
             confusion = Matrix()
             test_accuracy = learner.measure_accuracy(test_features, test_labels, confusion)
             print("Test set accuracy: {}".format(test_accuracy))
@@ -132,11 +133,11 @@ class MLSystemManager:
             data.shuffle()
 
             train_size = int(train_percent * data.rows)
-            train_features = Matrix(data, 0, 0, train_size, data.cols-1)
-            train_labels = Matrix(data, 0, data.cols-1, train_size, 1)
+            train_features = Matrix(data, 0, 0, train_size, data.cols - 1)
+            train_labels = Matrix(data, 0, data.cols - 1, train_size, 1)
 
-            test_features = Matrix(data, train_size, 0, data.rows - train_size, data.cols-1)
-            test_labels = Matrix(data, train_size, data.cols-1, data.rows - train_size, 1)
+            test_features = Matrix(data, train_size, 0, data.rows - train_size, data.cols - 1)
+            test_labels = Matrix(data, train_size, data.cols - 1, data.rows - train_size, 1)
 
             start_time = time.time()
             learner.train(train_features, train_labels)
@@ -172,11 +173,11 @@ class MLSystemManager:
                     begin = int(i * data.rows / folds)
                     end = int((i + 1) * data.rows / folds)
 
-                    train_features = Matrix(data, 0, 0, begin, data.cols-1)
-                    train_labels = Matrix(data, 0, data.cols-1, begin, 1)
+                    train_features = Matrix(data, 0, 0, begin, data.cols - 1)
+                    train_labels = Matrix(data, 0, data.cols - 1, begin, 1)
 
-                    test_features = Matrix(data, begin, 0, end - begin, data.cols-1)
-                    test_labels = Matrix(data, begin, data.cols-1, end - begin, 1)
+                    test_features = Matrix(data, begin, 0, end - begin, data.cols - 1)
+                    test_labels = Matrix(data, begin, data.cols - 1, end - begin, 1)
 
                     train_features.add(data, end, 0, data.cols - 1)
                     train_labels.add(data, end, data.cols - 1, 1)
@@ -199,12 +200,17 @@ class MLSystemManager:
     def parser(self):
         parser = argparse.ArgumentParser(description='Machine Learning System Manager')
 
-        parser.add_argument('-V', '--verbose', action='store_true', help='Print the confusion matrix and learner accuracy on individual class values')
+        parser.add_argument('-V', '--verbose', action='store_true', help='Print the confusion matrix and learner '
+                                                                         'accuracy on individual class values')
         parser.add_argument('-N', '--normalize', action='store_true', help='Use normalized data')
-        parser.add_argument('-R', '--seed', help="Random seed") # will give a string
-        parser.add_argument('-L', required=True, choices=['baseline', 'perceptron', "multiperceptron", "backprop", 'neuralnet', 'decisiontree', 'knn'], help='Learning Algorithm')
+        parser.add_argument('-R', '--seed', help="Random seed")  # will give a string
+        parser.add_argument('-L', required=True,
+                            choices=['baseline', 'perceptron', "multiperceptron", "backprop", 'neuralnet',
+                                     'decisiontree', 'knn', 'k_means', 'hac'], help='Learning Algorithm')
         parser.add_argument('-A', '--arff', metavar='filename', required=True, help='ARFF file')
-        parser.add_argument('-E', metavar=('METHOD', 'args'), required=True, nargs='+', help="Evaluation method (training | static <test_ARFF_file> | random <%%_for_training> | cross <num_folds>)")
+        parser.add_argument('-E', metavar=('METHOD', 'args'), required=True, nargs='+',
+                            help="Evaluation method (training | static <test_ARFF_file> | random <%%_for_training> "
+                                 "| cross <num_folds>)")
 
         return parser
 

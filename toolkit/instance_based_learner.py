@@ -14,13 +14,6 @@ def o(x, b):
 
 o = np.vectorize(o)
 
-def replace(x, y, z):
-    if x == y:
-        return z
-    return x
-
-replace = np.vectorize(replace)
-
 def replace_nan(x, z):
     if np.isnan(x):
         return z
@@ -34,6 +27,14 @@ def replace_inf(x, z):
     return x
 
 replace_inf = np.vectorize(replace_inf)
+
+def count_var_with_name(x, name):
+    if x == name:
+        return 1
+    else:
+        return 0
+
+count_var_with_name = np.vectorize(count_var_with_name)
 
 
 class InstanceBasedLearner(SupervisedLearner):
@@ -55,7 +56,39 @@ class InstanceBasedLearner(SupervisedLearner):
         self.max_features = []
         self.min_features = []
         self.is_nominal = []
+        self.info = []
         pass
+
+    def calc_info_s(self, data):
+        info = 0
+        array_size = np.size(data, axis=0)
+        for i in range(len(self.is_nominal)):
+            # noinspection PyTypeChecker
+            num = np.sum(count_var_with_name(data, i), axis=0)[-1]
+            p = num / array_size
+            if p != 0:
+                info -= p * np.log2(p)
+        return info
+
+    def calc_info_var(self, data, j):
+        info = 0
+        r = len(self.is_nominal)
+        array_size = np.size(data, axis=0)
+        for i in range(r):
+            # noinspection PyTypeChecker
+            num = np.sum(count_var_with_name(data, i), axis=0)[j]
+            p = num / array_size
+            if p != 0:
+                data_copy = self.idk(data, j, i)
+                info += p * self.calc_info_s(data_copy)
+        return info
+
+    def idk(self, data, j, value):
+        data_new = []
+        for line in data:
+            if line[j] == value:
+                data_new += [line]
+        return np.asarray(data_new)
 
     def train(self, features, labels):
         """
@@ -80,6 +113,10 @@ class InstanceBasedLearner(SupervisedLearner):
                                                                                        np.array(self.min_features))
         else:
             self.features = np.array(features.data)
+
+        data = np.hstack((features.data, labels.data))
+        for i in range(np.size(data, axis=1) - 1):
+            self.info += [self.calc_info_var(data, i)]
         self.labels = labels.data
 
     def predict(self, features, labels):
@@ -92,9 +129,10 @@ class InstanceBasedLearner(SupervisedLearner):
                                                                              np.array(self.min_features))
         features = o(features, self.is_nominal)
 
-        f = np.array(self.features) - np.array(features)  # todo: figure out what to do with unknown data
+        f = np.array(self.features) - np.array(features)
         f = replace_inf(f, 1)
         f = replace_nan(f, 1)
+        f = f * (1 - np.array(self.info))
         f = np.sum(np.square(f), axis=1)
         k_v = np.argpartition(f, self.k)[:self.k]
         l = 0
@@ -115,9 +153,6 @@ class InstanceBasedLearner(SupervisedLearner):
                 l += self.labels[index][0] / self.k
         if self.classification:
             l = np.round(l)
-        if l == float("nan"):
-            infisnfo = 0
         del labels[:]
         labels += [l]
 
-        # todo: for going farther try to weight the features according to information gain
