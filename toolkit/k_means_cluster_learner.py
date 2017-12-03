@@ -79,7 +79,7 @@ class KMeansClusterLearner(SupervisedLearner):
         centroid2 = np.copy(centroid)
         for j in range(np.size(self.categorical)):
             if self.categorical[j]:
-                c = list(np.ndarray.astype(replace_inf(f_data, float(self.features.cols)), int))
+                c = list(np.ndarray.astype(replace_inf(list(f_data), float(self.features.cols)), int))
                 b = np.transpose(c)[j]
                 a = np.bincount(b)
                 if np.size(a) > 1:
@@ -120,7 +120,7 @@ class KMeansClusterLearner(SupervisedLearner):
                 b_i = None
                 for cluster2 in clusters:
                     b_p = self.calc_average_dissimilarity(i, cluster2)
-                    if (b_i is None or b_i > b_p) and b_p != a_i:
+                    if (b_i is None or b_i > b_p) and b_i != a_i:
                         b_i = b_p
 
                 total_score += (b_i - a_i) / np.maximum(b_i, a_i)
@@ -168,8 +168,8 @@ class KMeansClusterLearner(SupervisedLearner):
         :type features: Matrix
         :type labels: Matrix
         """
-        features.normalize()
-        features.shuffle()
+        # features.normalize()
+        # features.shuffle()
         self.features = features
         self.categorical = [bool(x) for x in features.str_to_enum]
         self.min_features = np.min(features.data, axis=0)
@@ -193,7 +193,7 @@ class KMeansClusterLearner(SupervisedLearner):
         print('SSE: ' + str(b_sse) + '\n')
         sse = 0
         i = 0
-        while b_sse > sse or i < 30:
+        while b_sse > sse or i < 20:
             b_sse = sse
             print('Iteration ' + str(i + 1))
             self.centroids = self.calc_new_centroids()
@@ -203,10 +203,10 @@ class KMeansClusterLearner(SupervisedLearner):
             self.clusters = self.calculate_new_clusters()
             sse = self.calc_new_sse()
             print('SSE: ' + str(sse))
-            # total_sil = self.sil(self.clusters)
-            # print('Total Silhouette: ' + str(total_sil))
             print()
             i += 1
+            total_sil = self.sil(self.clusters)
+            print('Total Silhouette: ' + str(total_sil))
         sys.exit()
 
 

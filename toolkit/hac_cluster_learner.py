@@ -28,7 +28,7 @@ class HACClusterLearner(SupervisedLearner):
     """
 
     def __init__(self):
-        self.k = 4
+        self.k = 7
         self.complete_link = True
         self.normalization = False
 
@@ -94,8 +94,8 @@ class HACClusterLearner(SupervisedLearner):
         z = np.array(x) - np.array(y)
         for i in range(np.size(z)):
             if np.isinf(z[i]) or np.isneginf(z[i]) or np.isnan(z[i]):
-                # z[i] = self.max_features[i]
-                z[i] = 1
+                z[i] = self.max_features[i]
+                # z[i] = 1
             elif self.categorical[i] and z[i] != 0:
                 z[i] = 1
 
@@ -177,7 +177,7 @@ class HACClusterLearner(SupervisedLearner):
                 b_i = None
                 for cluster2 in clusters:
                     b_p = self.calc_average_dissimilarity(i, cluster2)
-                    if b_i is None or b_i > b_p:
+                    if (b_i is None or b_i > b_p) and b_i != a_i:
                         b_i = b_p
 
                 total_score += (b_i - a_i) / np.maximum(b_i, a_i)
@@ -191,6 +191,7 @@ class HACClusterLearner(SupervisedLearner):
         :type labels: Matrix
         """
         features.normalize()
+        features.shuffle()
         self.features = features
         # self.features.data = features.data[1:100]
         self.labels = labels
@@ -199,38 +200,32 @@ class HACClusterLearner(SupervisedLearner):
         self.min_features = np.min(features.data, axis=0)
         self.features.data = replace_inf(self.features.data, float("-inf"))
         self.max_features = np.max(features.data, axis=0)
-        if self.normalization:
-            for i in range(np.size(self.features.data, axis=0)):
-                for j in range(np.size(self.features.data, axis=1)):
-                    if not np.isinf(self.features.data[i][j]) and not np.isneginf(self.features.data[i][j]) and \
-                            not np.isnan(self.features.data[i][j]) and not self.categorical[j]:
-                        self.features.data[i][j] = (self.features.data[i][j] - self.min_features[j]) /\
-                                                   (self.max_features[j] - self.min_features[j])
 
 
         self.distance_matrix = self.create_distance_matrix()
-
-        while np.size(self.clusters, axis=0) > self.k:
-            x, y = self.find_shortest_distance()
-            self.combine_clusters(x, y)
-        # for cluster in self.clusters:
-        #     cluster.sort()
-        centroids = []
-        print('Number of Clusters : ' + str(self.k))
-        total_sse = 0
-        total_sil = self.sil(self.clusters)
-        for cluster in self.clusters:
-            print('Cluster: ' + str(cluster))
-            centroid = self.calc_centroid(cluster)
-            print('\tCentroid Values: ' + str(centroid[0]))
-            print('\tSize: ' + str(np.size(cluster)))
-            sse = self.sse(cluster, centroid[1])
-            print('\tSSE: ' + str(sse))
-            # print('\tSilhouette     : ' + str(sil))
-            total_sse += sse
-            centroids += [centroid]
-        print('Total SSE: ' + str(total_sse))
-        # print('Total Silhouette: ' + str(total_sil))
+        while self.k != 1:
+            while np.size(self.clusters, axis=0) > self.k:
+                x, y = self.find_shortest_distance()
+                self.combine_clusters(x, y)
+            # for cluster in self.clusters:
+            #     cluster.sort()
+            centroids = []
+            print('Number of Clusters : ' + str(self.k))
+            total_sse = 0
+            total_sil = self.sil(self.clusters)
+            for cluster in self.clusters:
+                print('Cluster: ' + str(cluster))
+                centroid = self.calc_centroid(cluster)
+                print('\tCentroid Values: ' + str(centroid[0]))
+                print('\tSize: ' + str(np.size(cluster)))
+                sse = self.sse(cluster, centroid[1])
+                print('\tSSE: ' + str(sse))
+                total_sse += sse
+                centroids += [centroid]
+            print('Total SSE: ' + str(total_sse))
+            print('Total Silhouette: ' + str(total_sil))
+            print()
+            self.k -= 1
         sys.exit()
 
     def predict(self, features, labels):
