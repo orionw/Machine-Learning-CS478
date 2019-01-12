@@ -92,7 +92,7 @@ class Matrix:
         rows = []           # we read data into array of rows, then convert into array of columns
 
         script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
-        abs_file_path = os.path.join(script_dir, filename)
+        abs_file_path = os.path.join(script_dir, "../", filename)
         f = open(abs_file_path)
         for line in f.readlines():
             line = line.rstrip()

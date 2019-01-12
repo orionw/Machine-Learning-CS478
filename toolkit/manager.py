@@ -2,12 +2,12 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 
 from toolkit.supervised_learner import SupervisedLearner
 from toolkit.baseline_learner import BaselineLearner
-from toolkit.perceptron_learner import PerceptronLearner
-from toolkit.multi_perceptron_learner import MultiPerceptronLearner
-from toolkit.backprop_learner import BackpropLearner
-from toolkit.decision_tree_learner import DecisionTreeLearner
-from toolkit.k_means_cluster_learner import KMeansClusterLearner
-from toolkit.hac_cluster_learner import HACClusterLearner
+# from toolkit.perceptron_learner import PerceptronLearner
+# from toolkit.multi_perceptron_learner import MultiPerceptronLearner
+# from toolkit.backprop_learner import BackpropLearner
+# from toolkit.decision_tree_learner import DecisionTreeLearner
+# from toolkit.k_means_cluster_learner import KMeansClusterLearner
+# from toolkit.hac_cluster_learner import HACClusterLearner
 from toolkit.instance_based_learner import InstanceBasedLearner
 from toolkit.matrix import Matrix
 import random
@@ -29,13 +29,13 @@ class MLSystemManager:
         """
         modelmap = {
             "baseline": BaselineLearner(),
-            "perceptron": PerceptronLearner(),
-            "multiperceptron": MultiPerceptronLearner(),
-            "backprop": BackpropLearner(),
-            "decisiontree": DecisionTreeLearner(),
+            # "perceptron": PerceptronLearner(),
+            # "multiperceptron": MultiPerceptronLearner(),
+            # "backprop": BackpropLearner(),
+            # "decisiontree": DecisionTreeLearner(),
             "knn": InstanceBasedLearner(),
-            "k_means": KMeansClusterLearner(),
-            "hac": HACClusterLearner()
+            # "k_means": KMeansClusterLearner(),
+            # "hac": HACClusterLearner()
         }
         if model in modelmap:
             return modelmap[model]
