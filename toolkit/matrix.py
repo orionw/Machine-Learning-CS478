@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 import random
 import numpy as np
 import re
+import os
 
 def mode(a, axis=0):
 # taken from scipy code
@@ -90,7 +91,9 @@ class Matrix:
 
         rows = []           # we read data into array of rows, then convert into array of columns
 
-        f = open(filename)
+        script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
+        abs_file_path = os.path.join(script_dir, filename)
+        f = open(abs_file_path)
         for line in f.readlines():
             line = line.rstrip()
             if len(line) > 0 and line[0] != '%':

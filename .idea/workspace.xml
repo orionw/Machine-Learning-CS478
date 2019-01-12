@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="b2d513cd-19e0-4da7-bcfa-24e4620d01f3" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/MachineLearningPython-CS478-.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MachineLearningPython-CS478-.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/BackpropLabReport.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/BackpropLabReport.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Iris.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_001_0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_001_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_001_7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_01_0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_01_0_10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_01_0_160.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_01_0_20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_01_0_40.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_01_0_80.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_01_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_01_3_80.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_01_7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_1_0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_1_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_1_7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_exp1png.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_exp2png.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_exp3png.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/Clas_Acc_Vowel_exp4png.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Iris.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_001_0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_001_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_001_7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_01_0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_01_0_10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_01_0_160.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_01_0_20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_01_0_40.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_01_0_80.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_01_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_01_3_80.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_01_7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_1_0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_1_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_1_7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_exp1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_exp2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_exp3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/graphs/MSE_Vowel_exp4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Backprop/~$ckpropLabReport.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Clustering/ClusteringLabReport.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Clustering/ClusteringLabReport.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/DecisionTree/DecisionTreeLabReport.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/DecisionTree/DecisionTreeLabReport.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/NearestNeighbor/NearestNeighborLabReport.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/NearestNeighbor/NearestNeighborLabReport.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Perceptron/PerceptronLabReport.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LabReports/Perceptron/PerceptronLabReport.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/toolkit/backprop_learner.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/toolkit/decision_tree_learner.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/toolkit/hac_cluster_learner.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/toolkit/k_means_cluster_learner.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/toolkit/matrix.py" beforeDir="false" afterPath="$PROJECT_DIR$/toolkit/matrix.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/toolkit/perceptron_learner.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/toolkit/test_matrix.py" beforeDir="false" afterPath="$PROJECT_DIR$/toolkit/test_matrix.py" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="282407723">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.open.time.2" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="py" value="7" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="Python" value="7" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="py" value="7" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="Python" value="7" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/toolkit/instance_based_learner.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="378">
+              <caret line="18" column="16" lean-forward="true" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
+              <folding>
+                <element signature="e#0#84#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/toolkit/test_matrix.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-756">
+              <caret line="3" column="26" lean-forward="true" selection-start-line="3" selection-start-column="26" selection-end-line="3" selection-end-column="26" />
+              <folding>
+                <element signature="e#0#84#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/toolkit/matrix.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="5" column="9" selection-start-line="5" selection-start-column="9" selection-end-line="5" selection-end-column="9" />
+              <folding>
+                <element signature="e#0#84#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/toolkit/test_matrix.py" />
+        <option value="$PROJECT_DIR$/toolkit/matrix.py" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-10" />
+    <option name="width" value="980" />
+    <option name="height" value="1040" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Machine-Learning-CS478" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Machine-Learning-CS478" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Machine-Learning-CS478" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Machine-Learning-CS478" type="462c0819:PsiDirectoryNode" />
+              <item name="toolkit" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Python tests.Unittests in test_baseline_learner.py">
+    <configuration name="Unittests in test_baseline_learner.py" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="MachineLearningPython-CS478-" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/toolkit/test_baseline_learner.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unittests in test_matrix.py" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="MachineLearningPython-CS478-" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/toolkit/test_matrix.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python tests.Unittests in test_matrix.py" />
+      <item itemvalue="Python tests.Unittests in test_baseline_learner.py" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python tests.Unittests in test_baseline_learner.py" />
+        <item itemvalue="Python tests.Unittests in test_matrix.py" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b2d513cd-19e0-4da7-bcfa-24e4620d01f3" name="Default Changelist" comment="" />
+      <created>1547313578394</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1547313578394</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="Unittests_in_test_matrix_py - 2019.01.12 at 10h 26m 02s.xml">
+      <configuration name="Unittests in test_matrix.py" configurationId="tests" />
+    </history-entry>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Favorites" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24983476" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Python Console" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32907802" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/toolkit/backprop_learner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#84#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/toolkit/decision_tree_learner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3486">
+          <folding>
+            <element signature="e#0#84#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/toolkit/hac_cluster_learner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3339">
+          <folding>
+            <element signature="e#0#84#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/toolkit/perceptron_learner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1071">
+          <folding>
+            <element signature="e#0#84#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/toolkit/instance_based_learner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="18" column="16" lean-forward="true" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#84#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/toolkit/test_matrix.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-756">
+          <caret line="3" column="26" lean-forward="true" selection-start-line="3" selection-start-column="26" selection-end-line="3" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#84#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/toolkit/matrix.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="5" column="9" selection-start-line="5" selection-start-column="9" selection-end-line="5" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#84#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
