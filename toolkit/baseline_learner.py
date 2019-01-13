@@ -36,6 +36,7 @@ class BaselineLearner(SupervisedLearner):
         """
         del labels[:]
         labels += self.labels
+        return labels
 
 
 

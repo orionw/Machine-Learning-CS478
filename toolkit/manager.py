@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 
 from toolkit.supervised_learner import SupervisedLearner
 from toolkit.baseline_learner import BaselineLearner
-# from toolkit.perceptron_learner import PerceptronLearner
+from toolkit.perceptron import Perceptron
 # from toolkit.multi_perceptron_learner import MultiPerceptronLearner
 # from toolkit.backprop_learner import BackpropLearner
 # from toolkit.decision_tree_learner import DecisionTreeLearner
@@ -29,7 +29,7 @@ class MLSystemManager:
         """
         modelmap = {
             "baseline": BaselineLearner(),
-            # "perceptron": PerceptronLearner(),
+            "perceptron": Perceptron(),
             # "multiperceptron": MultiPerceptronLearner(),
             # "backprop": BackpropLearner(),
             # "decisiontree": DecisionTreeLearner(),
