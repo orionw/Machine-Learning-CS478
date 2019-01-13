@@ -16,7 +16,7 @@ class Perceptron(SupervisedLearner):
         self.weights = []
         self.accuracy_hash = {}
         self.epoch_count = 0
-        self.learning_rate: float = .5
+        self.learning_rate: float = .1
         self.labels = []
 
     def _perform_epoch(self, features, labels):
@@ -58,12 +58,12 @@ class Perceptron(SupervisedLearner):
         :type labels: Matrix
         """
         # dont forget the bias - it's added at the end
-        self.weights = np.random.rand(features.cols)
-        # for row_num in range(features.rows):
-        #     row = features.row(row_num)
-        #     if len(row) < features.cols + 1:
-        #         # add bias - always one
-        #         row.append(1)
+        self.weights = np.zeros(features.cols + 1)
+        for row_num in range(features.rows):
+            row = features.row(row_num)
+            if len(row) < features.cols + 1:
+                # add bias - always one
+                row.append(1)
         margin_of_increase = .01
         accuracy_increasing = True
         while accuracy_increasing:

@@ -81,8 +81,3 @@ class SupervisedLearner:
                     correct_count += 1
 
             return correct_count / features.rows
-
-
-
-
-

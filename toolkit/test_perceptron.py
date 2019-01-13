@@ -1,6 +1,8 @@
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 
 from unittest import TestCase,TestLoader,TextTestRunner
+
+from toolkit.manager import plot_data
 from .perceptron import Perceptron
 from .matrix import Matrix
 import time
@@ -23,7 +25,9 @@ class TestPerceptronLearner(TestCase):
         accuracy = self.learn.measure_accuracy(features, labels, confusion)
         print("Training set accuracy: " + str(accuracy))
         print("Weights for the Perceptron are: {}".format(self.learn.weights))
+        plot_data(features.data, labels.data, self.learn.weights)
+        print('#### done ####')
 
 
-suite = TestLoader().loadTestsFromTestCase(TestPerceptronLearner)
-TextTestRunner(verbosity=2).run(suite)
+# suite = TestLoader().loadTestsFromTestCase(TestPerceptronLearner)
+# TextTestRunner(verbosity=2).run(suite)

@@ -13,6 +13,8 @@ from toolkit.matrix import Matrix
 import random
 import argparse
 import time
+import numpy as np
+import matplotlib.pyplot  as plt
 
 
 class MLSystemManager:
@@ -114,6 +116,9 @@ class MLSystemManager:
             test_labels = Matrix(test_data, 0, test_data.cols - 1, test_data.rows, 1)
             confusion = Matrix()
             test_accuracy = learner.measure_accuracy(test_features, test_labels, confusion)
+
+            plot_data(features.data, labels.data, learner.__getattribute__("weights") )
+
             print("Test set accuracy: {}".format(test_accuracy))
 
             if print_confusion_matrix:
@@ -213,6 +218,34 @@ class MLSystemManager:
                                  "| cross <num_folds>)")
 
         return parser
+
+
+def plot_data(inputs, targets, weights):
+    # fig config
+    inputs = np.asarray(inputs)
+    targets = np.asarray(targets)
+    weights = np.asarray(weights)
+
+    plt.figure(figsize=(10, 6))
+    plt.grid(True)
+
+    # plot input samples(2D data points) and i have two classes.
+    # one is +1 and second one is -1, so it red color for +1 and blue color for -1
+    for input, target in zip(inputs, targets):
+        plt.plot(input[0], input[1], 'ro' if (target == 1.0) else 'bo')
+
+    # Here i am calculating slope and intercept with given three weights
+    for i in np.linspace(np.amin(inputs[:, :1]), np.amax(inputs[:, :1])):
+        # slope = -(weights[0] / weights[2]) / (weights[0] / weights[1])
+        slope = -(weights[0] /  weights[1])
+        intercept = -weights[0]
+
+        # y =mx+c, m is slope and c is intercept
+        y = (slope * i) + intercept
+
+        plt.plot(i, y, 'ko')
+
+    plt.show()
 
 
 if __name__ == '__main__':
