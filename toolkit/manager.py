@@ -76,8 +76,8 @@ class MLSystemManager:
 
             print("Calculating accuracy on training set...")
 
-            features = Matrix(data, 0, 0, data.rows, data.cols)  # todo: edit here
-            labels = Matrix(data, 0, data.cols - 1, data.rows, 1)
+            features = Matrix(data, 0, 0, data.rows, data.cols - 1)  # todo: edit here
+            labels = Matrix(data, 0, data.cols - 1, data.rows, data.cols)
             confusion = Matrix()
             start_time = time.time()
             learner.train(features, labels)
@@ -221,6 +221,9 @@ class MLSystemManager:
 
 
 def plot_data(inputs, targets, weights):
+    if len(weights) < 3 or len(weights) > 3:
+        return
+
     # fig config
     inputs = np.asarray(inputs)
     targets = np.asarray(targets)
@@ -236,9 +239,8 @@ def plot_data(inputs, targets, weights):
 
     # Here i am calculating slope and intercept with given three weights
     for i in np.linspace(np.amin(inputs[:, :1]), np.amax(inputs[:, :1])):
-        # slope = -(weights[0] / weights[2]) / (weights[0] / weights[1])
-        slope = -(weights[0] /  weights[1])
-        intercept = -weights[0]
+        slope = -(weights[0] / weights[2]) / (weights[0] / weights[1])
+        intercept = -weights[0] / weights[2]
 
         # y =mx+c, m is slope and c is intercept
         y = (slope * i) + intercept

@@ -34,7 +34,9 @@ class Perceptron(SupervisedLearner):
             # update weights
             if output_class - pred_class != 0:
                 constants = self.learning_rate * (output_class - pred_class)
+                print("Change is {}".format(constants * row))
                 self.weights = constants * row + self.weights
+                print("Now weights are {}".format(self.weights))
 
         return self.weights
 
@@ -42,9 +44,9 @@ class Perceptron(SupervisedLearner):
     def _accuracy_increasing(self, margin_increasing):
         # print(self.accuracy_hash)
         accuracy_increasing = False
-        baseline: float = self.accuracy_hash[str(self.epoch_count - 20)]
+        baseline: float = self.accuracy_hash[str(self.epoch_count - 5)]
         # check the end point also
-        for iteration in range(self.epoch_count - 19, self.epoch_count + 1):
+        for iteration in range(self.epoch_count - 4, self.epoch_count + 1):
             # print(self.accuracy_hash[str(iteration)])
             if self.accuracy_hash[str(iteration)] - baseline > margin_increasing:
                 accuracy_increasing = True
@@ -75,7 +77,7 @@ class Perceptron(SupervisedLearner):
             accuracy_for_epoch: float = self._measure_accuracy(self.predict(features, labels), labels)
             self.accuracy_hash[str(self.epoch_count)] = accuracy_for_epoch
             # see if perceptron is still learning
-            if self.epoch_count > 20:
+            if self.epoch_count > 5:
                 accuracy_increasing = self._accuracy_increasing(margin_of_increase)
 
 
