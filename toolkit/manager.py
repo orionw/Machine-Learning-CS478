@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 from toolkit.supervised_learner import SupervisedLearner
 from toolkit.baseline_learner import BaselineLearner
 from toolkit.perceptron import Perceptron
-# from toolkit.multi_perceptron_learner import MultiPerceptronLearner
+from toolkit.MultiPerceptron import MultiPerceptron
 # from toolkit.backprop_learner import BackpropLearner
 # from toolkit.decision_tree_learner import DecisionTreeLearner
 # from toolkit.k_means_cluster_learner import KMeansClusterLearner
@@ -32,7 +32,7 @@ class MLSystemManager:
         modelmap = {
             "baseline": BaselineLearner(),
             "perceptron": Perceptron(),
-            # "multiperceptron": MultiPerceptronLearner(),
+             "multiperceptron": MultiPerceptron(),
             # "backprop": BackpropLearner(),
             # "decisiontree": DecisionTreeLearner(),
             "knn": InstanceBasedLearner(),
@@ -238,16 +238,24 @@ def plot_data(inputs, targets, weights):
         plt.plot(input[0], input[1], 'ro' if (target == 1.0) else 'bo')
 
     # Here i am calculating slope and intercept with given three weights
-    for i in np.linspace(np.amin(inputs[:, :1]), np.amax(inputs[:, :1])):
-        slope = -(weights[0] / weights[2]) / (weights[0] / weights[1])
-        intercept = -weights[0] / weights[2]
-
-        # y =mx+c, m is slope and c is intercept
-        y = (slope * i) + intercept
-
-        plt.plot(i, y, 'ko')
+    # for i in np.linspace(np.amin(inputs[:, :1]), np.amax(inputs[:, :1])):
+    slope = -(weights[0] / weights[1])
+    intercept = weights[2] / weights[1]
+    # y =mx+c, m is slope and c is intercept
+    abline(slope, intercept)
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    plt.title('Not Linearly Separable')
 
     plt.show()
+    print("plotted")
+
+def abline(slope, intercept):
+    """Plot a line from slope and intercept"""
+    axes = plt.gca()
+    x_vals = np.array(axes.get_xlim())
+    y_vals = intercept + slope * x_vals
+    plt.plot(x_vals, y_vals, '--')
 
 
 if __name__ == '__main__':

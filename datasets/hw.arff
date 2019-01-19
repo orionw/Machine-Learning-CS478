@@ -1,0 +1,9 @@
+@relation hw
+@attribute x real
+@attribute y real
+@attribute Target {0,1}
+@data
+-1,	-1,	0
+-1,	1,	1
+1,	-1,	1
+1,	1,	0
