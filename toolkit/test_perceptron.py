@@ -12,9 +12,9 @@ import time
 class TestPerceptronLearner(TestCase):
 
     data = Matrix()
-    data.load_arff("datasets/votingMissingValuesReplaced.arff")
-    #self.data.load_arff("datasets/not-linearly-seperable-self.data.arff")
-    #self.data.load_arff("datasets/linearly-seperable-self.data.arff")
+    #data.load_arff("datasets/votingMissingValuesReplaced.arff")
+    #data.load_arff("datasets/not-linearly-seperable-data.arff")
+    data.load_arff("datasets/linearly-seperable-data.arff")
     learn = Perceptron()
 
     def test_complete(self):
@@ -29,7 +29,7 @@ class TestPerceptronLearner(TestCase):
         print("Training set accuracy: " + str(accuracy))
         print("Weights for the Perceptron are: {}".format(self.learn.weights))
         print("Accuracy is: {}".format(self.learn.accuracy_hash))
-        plot_data(features.self.data, labels.self.data, self.learn.weights)
+        plot_data(features.data, labels.data, self.learn.weights)
         # plot the answers
         import matplotlib.pylab as plt
         mis = {key: 1 - self.learn.accuracy_hash[key] for key in self.learn.accuracy_hash.keys()}

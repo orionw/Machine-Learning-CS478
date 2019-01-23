@@ -4,7 +4,7 @@ from toolkit.supervised_learner import SupervisedLearner
 from toolkit.baseline_learner import BaselineLearner
 from toolkit.perceptron import Perceptron
 from toolkit.MultiPerceptron import MultiPerceptron
-# from toolkit.backprop_learner import BackpropLearner
+from toolkit.Backprop import BackProp
 # from toolkit.decision_tree_learner import DecisionTreeLearner
 # from toolkit.k_means_cluster_learner import KMeansClusterLearner
 # from toolkit.hac_cluster_learner import HACClusterLearner
@@ -32,8 +32,8 @@ class MLSystemManager:
         modelmap = {
             "baseline": BaselineLearner(),
             "perceptron": Perceptron(),
-             "multiperceptron": MultiPerceptron(),
-            # "backprop": BackpropLearner(),
+            "multiperceptron": MultiPerceptron(),
+            "backprop": BackProp(),
             # "decisiontree": DecisionTreeLearner(),
             "knn": InstanceBasedLearner(),
             # "k_means": KMeansClusterLearner(),
@@ -242,6 +242,7 @@ def plot_data(inputs, targets, weights):
     slope = -(weights[0] / weights[1])
     intercept = weights[2] / weights[1]
     # y =mx+c, m is slope and c is intercept
+    print("y = {}x + {}".format(slope, intercept))
     abline(slope, intercept)
     plt.xlabel('X')
     plt.ylabel('Y')
