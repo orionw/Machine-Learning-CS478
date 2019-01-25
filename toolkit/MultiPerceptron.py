@@ -29,6 +29,9 @@ class MultiPerceptron(SupervisedLearner):
         for class_type in range(0, self.output_classes):
             self.perceptron_list[class_type].train(features, label_list[class_type])
 
+        # train on data
+        for class_type in range(self.output_classes):
+            print(self.perceptron_list[class_type].accuracy_hash)
 
     # def find_majority(self, votes):
     #     vote_count = Counter(votes)
