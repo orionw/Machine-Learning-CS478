@@ -69,10 +69,11 @@ class BackProp(SupervisedLearner):
                 print("Feed Forward with row: {}".format(row))
                 output = self._feed_forward(row)
                 print("backpropogating errors with output: {}".format(output))
-                self._back_propagate(output, labels.row(row_num))
-                print("Done backprop.  Weights are now: {}".format(self.weights))
-                accuracy_for_epoch: float = self._measure_accuracy(self.predict(features_bias, labels), labels)
-                self.accuracy_hash[str(self.epoch_count)] = accuracy_for_epoch
+                self._back_propagate(output, labels.row(row_num), row)
+                print("Done backprop.  Weights are now: \n {}".format(self.weights))
+                #accuracy_for_epoch: float = self._measure_accuracy(self.predict(features_bias, labels), labels)
+                #self.accuracy_hash[str(self.epoch_count)] = accuracy_for_epoch
+                self.epoch_count += 1
         return
 
 
@@ -111,9 +112,7 @@ class BackProp(SupervisedLearner):
         :type features: [float]
         :type labels: [float]
         """
-        del labels[:]
-        labels += self.labels
-        return labels
+        return [0 * labels.rows]
 
     def _feed_forward(self, row):
         # TODO: update output matrix to hold all outputted outputs
@@ -150,10 +149,9 @@ class BackProp(SupervisedLearner):
         deltas = np.array(deltas)
         return  output * (1 - output) * deltas
 
-    def _back_propagate(self, output, target):
+    def _back_propagate(self, output, target, input):
         # go through in reverse order to propagate error
         changes_in_weights = np.zeros_like(self.weights)
-        weights_add = []
         # use np for array operations
         output = np.array(output)
         target = np.array(target)
@@ -172,39 +170,45 @@ class BackProp(SupervisedLearner):
                 print("Delta for Output Nodes are {}".format(delta))
                 for node_num in range(len(weight_matrix)):
                         # note: target and output are vectors
+                        output_val = self.output_matrix[len(self.output_matrix) - 2 - index_matrix][node_num]
+                        change_in_weights = self.learning_rate * delta * output_val
 
-                        change_in_weights = self.learning_rate * delta * \
-                                      self.output_matrix[len(self.output_matrix) - 2 - index_matrix][node_num]
                         error[node_num] = change_in_weights
                 # now do bias node by getting the bias weights to multiply in
                 # bias nodes are learning_rate * delta  = change in weight
                 error[len(weight_matrix[0]) - index_matrix - 1] = self.learning_rate * delta
-                print("This is the backprop error: {}".format(error))
                 # update the weights
                 changes_in_weights[len(self.weights) - index_matrix - 1] = error.T
-                weights_add.append(error)
-                print("\nWeights for the output layer are: {}\n".format(self.weights[matrix_num - index_matrix - 1] + error.T))
+                print("\nWeights for the output layer are: \n{}\n".
+                      format(self.weights[matrix_num - index_matrix - 1] + error.T))
 
             # not output layer
             else:
-                delta = self._delta_hidden(self.output_matrix[index_matrix],
+                delta = self._delta_hidden(self.output_matrix[matrix_num - index_matrix - 1],
                                            index_matrix, self.weights[matrix_num - index_matrix])
+                self.delta_values_stored[index_matrix] = delta
                 print("Delta for hidden Nodes are {}".format(delta))
 
                 for node_num in range(len(weight_matrix)):
                     # note: target and output are vectors
-
-                    change_in_weights = self.learning_rate * delta * \
-                                        self.output_matrix[len(self.output_matrix) - 2 - index_matrix][node_num]
+                    if matrix_num - index_matrix == 1:
+                        # input layer, use input
+                        output_val = input[node_num]
+                    else:
+                        output_val = self.output_matrix[len(self.output_matrix) - 2 - index_matrix][node_num]
+                    change_in_weights = self.learning_rate * delta * output_val
                     error[node_num] = change_in_weights
+
                 # now do bias node by getting the bias weights to multiply in
                 # bias nodes are learning_rate * delta  = change in weight
                 error[len(weight_matrix[0]) - 1] = self.learning_rate * delta
-                print("This is the backprop error: {}".format(error))
                 # update the weights
-                weights_add.append(error)
-                #self.weights[len(self.weights) - index_matrix - 1] += error.T
-                print("Weights for the final layer are: {}".format(len(self.weights) - index_matrix - 1))
+                changes_in_weights[len(self.weights) - index_matrix - 1] = error.T
+                print("\nWeights for layer {} are:\n {}\n".
+                      format((matrix_num - index_matrix - 1),
+                             self.weights[matrix_num - index_matrix - 1] + error.T))
+
+        self.weights += changes_in_weights
 
 
 
