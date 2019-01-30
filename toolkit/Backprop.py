@@ -10,7 +10,7 @@ class BackProp(SupervisedLearner):
     """
 
 
-    def __init__(self, nodes_per_layer=3, hidden_layers=1, output_nodes=1):
+    def __init__(self, nodes_per_layer=3, hidden_layers=1, output_nodes=1, batch_norm = False):
         # add bias and initial weights
         # self.weights = []
         # for layer in range(hidden_layers):
@@ -32,6 +32,7 @@ class BackProp(SupervisedLearner):
         self.labels = []
         self.output_classes = 0
         self.input_layer = []
+        self.batch_norm_enabled = batch_norm
 
     def add_bias_to_features(self, features, numpy_array=False):
         if not numpy_array:
@@ -60,16 +61,18 @@ class BackProp(SupervisedLearner):
         # create a new features set with a bias for training
         features_bias = Matrix(features, 0, 0, features.rows, features.cols)
         features_bias = self.add_bias_to_features(features_bias)
+        last_row_num = features_bias.rows - 1
 
         # start learning
         while self._is_still_learning(self):
-            print(" #### On Epoch Number {} with weights {}".format(self.epoch_count, self.weights))
+            print(" #### On Epoch Number {} with weights \n{}\n".format(self.epoch_count, self.weights))
             for row_num in range(features_bias.rows):
                 row = features_bias.row(row_num)
                 print("Feed Forward with row: {}".format(row))
                 output = self._feed_forward(row)
                 print("backpropogating errors with output: {}".format(output))
-                self._back_propagate(output, labels.row(row_num), row)
+                self._back_propagate(output, labels.row(row_num), row, self.batch_norm_enabled,
+                                     (self.batch_norm_enabled and row_num == last_row_num))
                 print("Done backprop.  Weights are now: \n {}".format(self.weights))
                 #accuracy_for_epoch: float = self._measure_accuracy(self.predict(features_bias, labels), labels)
                 #self.accuracy_hash[str(self.epoch_count)] = accuracy_for_epoch
@@ -116,19 +119,24 @@ class BackProp(SupervisedLearner):
 
     def _feed_forward(self, row):
         # TODO: update output matrix to hold all outputted outputs
-        self.output_matrix = np.zeros(tuple([self.hidden_layers + 1, self.nodes_per_layer]))
+        self.output_matrix = np.zeros(tuple([self.hidden_layers + 1, self.nodes_per_layer, self.hidden_layers + 1]))
         # send input as first input layer
         input_values = row
         next_input_values: list
         for index_matrix, weight_matrix in enumerate(self.weights):
             next_input_values = []
+            output_row = []
             for index_node, row in enumerate(weight_matrix):
                 #self._build_output(input_values, row, index_matrix, index_node)
                 net = np.dot(input_values, row)
                 output = self.output_sigmoid(net)
-                self.output_matrix[index_matrix][index_node] = output
+                output_row.append(output)
+                if index_node == weight_matrix.shape[0] - 1:
+                    output_row.append(1)
                 next_input_values.append(float(output))
             # add bias node if it's not the output layer
+            self.output_matrix[index_matrix] = np.tile(np.array(output_row), (2, 1))
+
             if index_matrix != self.output_layers:
                 next_input_values.append(1)
                 # send current rows output to the next row
@@ -140,75 +148,51 @@ class BackProp(SupervisedLearner):
     def _delta_output(target, output):
         return (target - output) * output * (1 - output)
 
-    def _delta_hidden(self, output, matrix_index, weight_matrix):
+    def _delta_hidden(self, output, delta_previous, weight_matrix):
         # output (1- output) * sum of weights to next layer * delta of that next layer
-        # get the layer before delta values
+        # get the layer before delta
+        output = output[:, :-1]
+
         deltas = []
         for index, row in enumerate(weight_matrix[:, :-1].T):
-            deltas.append(np.dot(row, self.delta_values_stored[matrix_index - 1]))
+            deltas.append(np.dot(row, delta_previous))
         deltas = np.array(deltas)
         return  output * (1 - output) * deltas
 
-    def _back_propagate(self, output, target, input):
-        # go through in reverse order to propagate error
-        changes_in_weights = np.zeros_like(self.weights)
+    def _back_propagate(self, output, target, input, batch_norm, end_of_batch=False):
         # use np for array operations
         output = np.array(output)
         target = np.array(target)
         matrix_num = len(self.weights)
-        self.delta_values_stored = np.zeros(tuple([self.hidden_layers + 1, self.nodes_per_layer]))
-        # start from the end matrix -> output matrix
-        for index_matrix, weight_matrix in enumerate(reversed(self.weights)):
-            next_input_values = []
 
-            # is output layer
-            error = np.zeros([3, 2])
-            if index_matrix == 0:
-                delta = self._delta_output(target, output)
-                # output layer goes in first
-                self.delta_values_stored[index_matrix] = delta
-                print("Delta for Output Nodes are {}".format(delta))
-                for node_num in range(len(weight_matrix)):
-                        # note: target and output are vectors
-                        output_val = self.output_matrix[len(self.output_matrix) - 2 - index_matrix][node_num]
-                        change_in_weights = self.learning_rate * delta * output_val
+        ################## Get Deltas #######################
+        self.delta_storage = np.zeros_like(self.output_matrix)
+        self.delta_storage[-1] = np.tile(self._delta_output(target, output), (3, 1)).T
+        delta_prev = self.delta_storage[-1].T[0]
+        for iteration in range(1, self.hidden_layers + 1):
+            output_val = self.output_matrix[matrix_num - iteration - 1]
+            delta_new = self._delta_hidden(output_val,
+                                           delta_prev, self.weights[matrix_num - iteration])
+            # reference not the last, but the one before it and then iterate downward
+            self.delta_storage[self.delta_storage.shape[0] - 1 - iteration] = np.tile(delta_new[0], (3, 1)).T
+            delta_prev = delta_new[0]
 
-                        error[node_num] = change_in_weights
-                # now do bias node by getting the bias weights to multiply in
-                # bias nodes are learning_rate * delta  = change in weight
-                error[len(weight_matrix[0]) - index_matrix - 1] = self.learning_rate * delta
-                # update the weights
-                changes_in_weights[len(self.weights) - index_matrix - 1] = error.T
-                print("\nWeights for the output layer are: \n{}\n".
-                      format(self.weights[matrix_num - index_matrix - 1] + error.T))
+        # print("The error values (deltas) are \n{}".format(self.delta_storage))
 
-            # not output layer
-            else:
-                delta = self._delta_hidden(self.output_matrix[matrix_num - index_matrix - 1],
-                                           index_matrix, self.weights[matrix_num - index_matrix])
-                self.delta_values_stored[index_matrix] = delta
-                print("Delta for hidden Nodes are {}".format(delta))
+        ################# Configure outputs ###################
 
-                for node_num in range(len(weight_matrix)):
-                    # note: target and output are vectors
-                    if matrix_num - index_matrix == 1:
-                        # input layer, use input
-                        output_val = input[node_num]
-                    else:
-                        output_val = self.output_matrix[len(self.output_matrix) - 2 - index_matrix][node_num]
-                    change_in_weights = self.learning_rate * delta * output_val
-                    error[node_num] = change_in_weights
+        # shift the index one over to account for first output being recorded
+        output_for_multi = np.copy(self.output_matrix)
+        for value in range(0, self.output_matrix.shape[0] - 1):
+            output_for_multi[value + 1] = self.output_matrix[value]
+        output_for_multi[0] = np.tile(input, (2, 1))
 
-                # now do bias node by getting the bias weights to multiply in
-                # bias nodes are learning_rate * delta  = change in weight
-                error[len(weight_matrix[0]) - 1] = self.learning_rate * delta
-                # update the weights
-                changes_in_weights[len(self.weights) - index_matrix - 1] = error.T
-                print("\nWeights for layer {} are:\n {}\n".
-                      format((matrix_num - index_matrix - 1),
-                             self.weights[matrix_num - index_matrix - 1] + error.T))
+        ##############W## Compute the weight changes ############
+        weight_changes = self.delta_storage * output_for_multi * self.learning_rate
 
-        self.weights += changes_in_weights
+        if (batch_norm and end_of_batch) or not batch_norm:
+            self.weights += weight_changes
+
 
 
 
