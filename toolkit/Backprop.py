@@ -10,31 +10,44 @@ class BackProp(SupervisedLearner):
     """
 
 
-    def __init__(self, nodes_per_layer=3, hidden_layers=1, output_nodes=1, batch_norm = False):
-        # add bias and initial weights
-        # self.weights = []
-        # for layer in range(hidden_layers):
-        #     self.weights.append(np.random.rand(nodes_per_layer, nodes_per_layer + 1))
+    def __init__(self, nodes_per_layer=3, hidden_layers=1, output_nodes=1, momentum=0, batch_norm = False):
+        if hidden_layers > 1:
+            # add hidden layer weights only if more than one layer is chosen
+            self.weights = np.random.rand(hidden_layers, nodes_per_layer + 1)
+        else:
+            self.weights = np.array([])
+
+        # The following weights are for testbp.arff
         # bias weights are moved to the end
-        self.weights = [[[0.2, -0.1, 0.1], [0.3, -0.3, -0.2]],
-                        [[-0.2, -0.3, 0.1], [-0.1, 0.3, 0.2]],
-                        [[-0.1, 0.3, 0.2], [-0.2, -0.3, 0.1]]]
-        self.weights = np.asarray(self.weights)
+        # self.weights = [[[0.2, -0.1, 0.1], [0.3, -0.3, -0.2]],
+        #                 [[-0.2, -0.3, 0.1], [-0.1, 0.3, 0.2]],
+        #                 [[-0.1, 0.3, 0.2], [-0.2, -0.3, 0.1]]]
+
+        # these weights are for testbp2.arff
+        # ordering is 5, 4, 6
+        #             8, 7, 9
+        #             11, 10, 12
+        self.input_layer = np.array([[-0.03, 0.03, -0.01], [0.04, -0.02, 0.01], [.03, 0.02, -0.02]])
+        # order is w1, w2, w3, w0
+        self.output_layer = np.array([[-0.01, 0.03, 0.02, 0.02]])
+
+        # self.weights = np.array(self.weights)
         ## Note on Weights ##
         # Weights are organized backwards = the top of the array is the leftmost(bottom) layer
-        self.output_layer: np.ndarray = np.random.rand(1)
+        self.output_layer: np.ndarray
         self.nodes_per_layer = nodes_per_layer
         self.hidden_layers = hidden_layers
         self.accuracy_hash = {}
         self.epoch_count = 0
-        self.learning_rate: float = .1
+        self.learning_rate: float = .175
         self.momentum: float = .1
         self.labels = []
         self.output_classes = 0
-        self.input_layer = []
         self.batch_norm_enabled = batch_norm
+        self.has_hidden = self.hidden_layers > 1
 
-    def add_bias_to_features(self, features, numpy_array=False):
+    @staticmethod
+    def add_bias_to_features(features, numpy_array=False):
         if not numpy_array:
             for row_num in range(features.rows):
                 row = features.row(row_num)
@@ -52,8 +65,12 @@ class BackProp(SupervisedLearner):
         :type features: Matrix
         :type labels: Matrix
         """
-        # setup input layer to match specs
-        self.input_layer = np.random.rand(features.cols, features.cols + 1)
+        # only need n - 1 nodes
+        #self.output_classes = len(set(labels.col(labels.cols - 1))) - 1
+        # set up output layer => the number of classes by the size of the previous hidden layer
+        #self.output_layer = np.random.rand(self.output_classes, self.nodes_per_layer + 1)
+        # setup input layer to match specs - number of nodes to connect to, number of inputs plus bias
+        #self.input_layer = np.random.rand(len(self.weights[0]), features.cols + 1)
         # setup output layer to match specs
         # self.output_classes = len(set(labels.col(labels.cols - 1)))
         # self.output_layer: np.ndarray = np.random.rand(labels.cols)
@@ -73,10 +90,11 @@ class BackProp(SupervisedLearner):
                 print("backpropogating errors with output: {}".format(output))
                 self._back_propagate(output, labels.row(row_num), row, self.batch_norm_enabled,
                                      (self.batch_norm_enabled and row_num == last_row_num))
-                print("Done backprop.  Weights are now: \n {}".format(self.weights))
-                #accuracy_for_epoch: float = self._measure_accuracy(self.predict(features_bias, labels), labels)
-                #self.accuracy_hash[str(self.epoch_count)] = accuracy_for_epoch
-                self.epoch_count += 1
+            accuracy_for_epoch: float = self._measure_accuracy(self.predict(features_bias, labels,
+                                                                            individual_pred=False), labels)
+            self.accuracy_hash[str(self.epoch_count)] = accuracy_for_epoch
+            self.epoch_count += 1
+
         return
 
 
@@ -110,89 +128,139 @@ class BackProp(SupervisedLearner):
     def output_sigmoid(net):
         return 1 / (1 + np.exp(-net))
 
-    def predict(self, features, labels):
+    def predict(self, features, labels, individual_pred=True):
         """
         :type features: [float]
         :type labels: [float]
+        :type individual_pred: [bool]
         """
-        return [0 * labels.rows]
+        if individual_pred:  # being called from manager.py
+            return self._feed_forward(features.data)
+
+        else:  # otherwise we passed in a matrix
+            prediction_list = []
+            for row in features.data:
+                prediction_list.append(self._feed_forward(row))
+            return prediction_list
+
+
 
     def _feed_forward(self, row):
-        # TODO: update output matrix to hold all outputted outputs
-        self.output_matrix = np.zeros(tuple([self.hidden_layers + 1, self.nodes_per_layer, self.hidden_layers + 1]))
+        self.output_matrix = np.zeros(tuple([self.hidden_layers + 1, self.nodes_per_layer, self.nodes_per_layer + 1]))
         # send input as first input layer
         input_values = row
-        next_input_values: list
+        next_input_values: list = []
+        ##### Start with input layer #####
+        output_row = []
+        for index_node, row in enumerate(self.input_layer):
+            net = np.dot(input_values, row)
+            output = self.output_sigmoid(net)
+            output_row.append(output)
+            next_input_values.append(float(output))
+        # add bias for hidden layers
+        output_row.append(1)
+        input_values = output_row
+        self.input_outputs = np.array(output_row)
+
+        #### Feed that into hidden layers ####
+        self.hidden_outputs = []
         for index_matrix, weight_matrix in enumerate(self.weights):
-            next_input_values = []
             output_row = []
             for index_node, row in enumerate(weight_matrix):
-                #self._build_output(input_values, row, index_matrix, index_node)
                 net = np.dot(input_values, row)
                 output = self.output_sigmoid(net)
                 output_row.append(output)
-                if index_node == weight_matrix.shape[0] - 1:
-                    output_row.append(1)
                 next_input_values.append(float(output))
-            # add bias node if it's not the output layer
-            self.output_matrix[index_matrix] = np.tile(np.array(output_row), (2, 1))
+                if row == weight_matrix[-1]:
+                    output_row.append(1)
+                    input_values = output_row
+                    self.hidden_outputs.append(output_row)
 
-            if index_matrix != self.output_layers:
-                next_input_values.append(1)
-                # send current rows output to the next row
-                input_values = next_input_values
+        ##### Feed hidden layer output into
+        final_output = []
+        for index_node, row in enumerate(self.output_layer):
+            net = np.dot(input_values, row)
+            output = self.output_sigmoid(net)
+            final_output.append(output)
+            next_input_values.append(float(output))
 
-        return next_input_values
+
+        return final_output
+
 
     @staticmethod
     def _delta_output(target, output):
         return (target - output) * output * (1 - output)
 
-    def _delta_hidden(self, output, delta_previous, weight_matrix):
+    @staticmethod
+    def _delta_hidden(output, delta_previous, weight_matrix):
         # output (1- output) * sum of weights to next layer * delta of that next layer
-        # get the layer before delta
-        output = output[:, :-1]
-
-        deltas = []
-        for index, row in enumerate(weight_matrix[:, :-1].T):
-            deltas.append(np.dot(row, delta_previous))
-        deltas = np.array(deltas)
+        # remove bias from delta calculation
+        weight_matrix = weight_matrix[:-1]
+        deltas = weight_matrix * delta_previous
+        # lastly compute f'(x)
         return  output * (1 - output) * deltas
 
     def _back_propagate(self, output, target, input, batch_norm, end_of_batch=False):
         # use np for array operations
         output = np.array(output)
         target = np.array(target)
+        input = np.array(input)
         matrix_num = len(self.weights)
 
-        ################## Get Deltas #######################
-        self.delta_storage = np.zeros_like(self.output_matrix)
-        self.delta_storage[-1] = np.tile(self._delta_output(target, output), (3, 1)).T
-        delta_prev = self.delta_storage[-1].T[0]
-        for iteration in range(1, self.hidden_layers + 1):
-            output_val = self.output_matrix[matrix_num - iteration - 1]
-            delta_new = self._delta_hidden(output_val,
-                                           delta_prev, self.weights[matrix_num - iteration])
+
+        #### Delta for Output Layer ####
+        output_deltas = self._delta_output(target, output)
+        last_used_weights = self.output_layer[-1]
+
+        ## Deltas for Hidden Layers ##
+        delta_prev = output_deltas
+        hidden_deltas = np.zeros_like(self.weights)
+        # go back through each hidden layer
+        for iteration, layer in enumerate(self.weights):
+            output_val = self.hidden_outputs[len(self.hidden_outputs - 1 - iteration)]
+            last_used_weights = self.weights[matrix_num - iteration]
+            hidden_delta = self._delta_hidden(output_val,
+                                           delta_prev, last_used_weights)
             # reference not the last, but the one before it and then iterate downward
-            self.delta_storage[self.delta_storage.shape[0] - 1 - iteration] = np.tile(delta_new[0], (3, 1)).T
-            delta_prev = delta_new[0]
+            hidden_deltas[iteration] = hidden_delta
+            # grab the last row
+            delta_prev = hidden_delta
 
-        # print("The error values (deltas) are \n{}".format(self.delta_storage))
-
-        ################# Configure outputs ###################
-
-        # shift the index one over to account for first output being recorded
-        output_for_multi = np.copy(self.output_matrix)
-        for value in range(0, self.output_matrix.shape[0] - 1):
-            output_for_multi[value + 1] = self.output_matrix[value]
-        output_for_multi[0] = np.tile(input, (2, 1))
-
-        ##############W## Compute the weight changes ############
-        weight_changes = self.delta_storage * output_for_multi * self.learning_rate
-
-        if (batch_norm and end_of_batch) or not batch_norm:
-            self.weights += weight_changes
+        ## Deltas for Input Layer ##
+        input_deltas: list
+        input_deltas = self._delta_hidden(output=self.input_outputs[:-1],
+                                          delta_previous=delta_prev, weight_matrix=last_used_weights)
 
 
+        print("The error values are: \n {} \n {} \n {}".format(output_deltas, hidden_deltas, input_deltas))
+
+        ###### Configure outputs ######
+        if self.has_hidden:
+            output_storage = [self.hidden_outputs, self.input_outputs, input]
+        else:
+            output_storage = [self.input_outputs, input]
+
+        ### prepare weight changes ###
+        change_in_output_weights = self.learning_rate * output_storage[0] * output_deltas
+        if self.hidden_outputs:
+            change_in_hidden_weights = self.learning_rate * output_storage[1] * hidden_deltas
+        else:
+            change_in_hidden_weights = 0
+
+        change_in_input_weights = []
+        for value in input_deltas:
+            change_in_input_weights.append(output_storage[-1] * value * self.learning_rate)
+
+        # want to multiple each delta by each all the elements in inputs/outputs
+        print("Done with backprop")
+        print("Weights are now \n {} \n {} \n {} \n".format(self.input_layer + change_in_input_weights,
+                                                            self.hidden_layers + change_in_hidden_weights,
+                                                            self.output_layer + change_in_output_weights))
+
+        ##### Update the weights #####
+        self.input_layer += change_in_input_weights
+        self.hidden_layers += change_in_hidden_weights
+        self.output_layer += change_in_output_weights
 
 
