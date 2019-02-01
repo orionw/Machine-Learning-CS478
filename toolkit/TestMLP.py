@@ -14,12 +14,12 @@ class TestMLP(TestCase):
     data = Matrix()
     #data.load_arff("datasets/votingMissingValuesReplaced.arff")
     #data.load_arff("datasets/not-linearly-seperable-data.arff")
-    data.load_arff("test/testbp.arff")
-    learn = BackProp(hidden_layers=2, nodes_per_layer=2, output_nodes=2)
+    data.load_arff("test/testbp2.arff")
+    learn = BackProp(num_hidden_layers=1, nodes_per_layer=2, output_nodes=2)
 
     def test_complete(self):
-        features = Matrix(self.data, 0, 0, self.data.rows, self.data.cols - 2)
-        labels = Matrix(self.data, 0, self.data.cols - 2, self.data.rows, self.data.cols)
+        features = Matrix(self.data, 0, 0, self.data.rows, self.data.cols - 1)
+        labels = Matrix(self.data, 0, self.data.cols - 1, self.data.rows, self.data.cols)
         confusion = Matrix()
         start_time = time.time()
         self.learn.train(features, labels)
