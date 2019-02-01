@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 
 from .matrix import Matrix
 import math
+import numpy as np
 
 # this is an abstract class
 
@@ -46,6 +47,14 @@ class SupervisedLearner:
         if features.rows == 0:
             raise Exception("Expected at least one row")
 
+        try:
+            if self.model_type == "BackProp":
+                features_to_change = Matrix(features, 0, 0, features.rows, features.cols)
+                features = features_to_change
+        except AttributeError as e:
+            # wasn't backprop, pass
+            pass
+
         label_values_count = labels.value_count(0)
         if label_values_count == 0:
             # label is continuous
@@ -74,6 +83,11 @@ class SupervisedLearner:
                 if targ >= label_values_count:
                     raise Exception("The label is out of range")
                 pred = self.predict(feat, prediction)
+                if type(pred[0]) == np.float64:
+                    # use a round/softmax
+                    max_index = np.argmax(pred)
+                    # TODO: implement a SOFTMAX
+                    pred = [round(pred[max_index])]
                 pred = (pred[0])
                 # if confusion:
                 #      confusion.set(targ, pred, confusion.get(targ, pred)+1)

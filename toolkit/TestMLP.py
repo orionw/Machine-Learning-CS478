@@ -14,8 +14,8 @@ class TestMLP(TestCase):
     data = Matrix()
     #data.load_arff("datasets/votingMissingValuesReplaced.arff")
     #data.load_arff("datasets/not-linearly-seperable-data.arff")
-    data.load_arff("test/testbp2.arff")
-    learn = BackProp(num_hidden_layers=1, nodes_per_layer=2, output_nodes=2)
+    data.load_arff("datasets/iris.arff")
+    learn = BackProp(num_hidden_layers=1, nodes_per_layer=3)
 
     def test_complete(self):
         features = Matrix(self.data, 0, 0, self.data.rows, self.data.cols - 1)
@@ -27,9 +27,11 @@ class TestMLP(TestCase):
         print("Time to train (in seconds): {}".format(elapsed_time))
         accuracy = self.learn.measure_accuracy(features, labels, confusion)
         print("Training set accuracy: " + str(accuracy))
-        print("Weights for the Perceptron are: {}".format(self.learn.weights))
+        print("Weights for the Perceptron are: \n{}\n{}\n{}".format(self.learn.input_layer,
+                                                                    self.learn.hidden_layers,
+                                                                    self.learn.output_layer))
         print("Accuracy is: {}".format(self.learn.accuracy_hash))
-        plot_data(features.data, labels.data, self.learn.weights)
+        plot_data(features.data, labels.data, self.learn.hidden_layers)
         # plot the answers
         import matplotlib.pylab as plt
         mis = {key: 1 - self.learn.accuracy_hash[key] for key in self.learn.accuracy_hash.keys()}
