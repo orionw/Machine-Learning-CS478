@@ -13,9 +13,9 @@ class TestMLP(TestCase):
 
     data = Matrix()
     #data.load_arff("datasets/votingMissingValuesReplaced.arff")
-    #data.load_arff("datasets/not-linearly-seperable-data.arff")
-    data.load_arff("datasets/iris.arff")
-    learn = BackProp(num_hidden_layers=1, nodes_per_layer=3)
+    data.load_arff("test/testbp2.arff")
+    #data.load_arff("datasets/iris.arff")
+    learn = BackProp(num_hidden_layers=1, nodes_per_layer=3, momentum=.9, learning_rate=.175)
 
     def test_complete(self):
         features = Matrix(self.data, 0, 0, self.data.rows, self.data.cols - 1)

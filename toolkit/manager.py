@@ -221,7 +221,7 @@ class MLSystemManager:
 
 
 def plot_data(inputs, targets, weights):
-    if len(weights) < 3 or len(weights) > 3:
+    if type(weights) == np.ndarray and not (2 < weights.shape[0] < 4) or not (2 < weights.shape[1] == 1):
         return
 
     # fig config

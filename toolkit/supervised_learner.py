@@ -87,7 +87,7 @@ class SupervisedLearner:
                     # use a round/softmax
                     max_index = np.argmax(pred)
                     # TODO: implement a SOFTMAX
-                    pred = [round(pred[max_index])]
+                    pred = [max_index if round(pred[max_index]) else ValueError]
                 pred = (pred[0])
                 # if confusion:
                 #      confusion.set(targ, pred, confusion.get(targ, pred)+1)
