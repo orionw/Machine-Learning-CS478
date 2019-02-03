@@ -2,6 +2,8 @@ from toolkit.supervised_learner import SupervisedLearner
 from toolkit.matrix import Matrix
 import numpy as np
 import matplotlib as plt
+import operator
+
 
 
 class BackProp(SupervisedLearner):
@@ -10,12 +12,14 @@ class BackProp(SupervisedLearner):
     """
 
 
-    def __init__(self, nodes_per_layer=3, num_hidden_layers=1, momentum=0, learning_rate=.1,
+    def __init__(self, nodes_per_layer=3, num_hidden_layers=1, momentum=.0, learning_rate=.1,
                  batch_norm = False):
+        self.min = -.05
+        self.max = .05
         self.output_layer = np.ndarray
         if num_hidden_layers > 1:
             # add hidden layer weights only if more than one layer is chosen
-            self.hidden_layers = np.random.uniform(low=-0.1, high=0.1,
+            self.hidden_layers = np.random.uniform(low=-self.min, high=self.max,
                                                    size=(num_hidden_layers, nodes_per_layer, nodes_per_layer + 1))
         else:
             self.hidden_layers = np.array([])
@@ -32,10 +36,10 @@ class BackProp(SupervisedLearner):
         # ordering is 5, 4, 6
         #             8, 7, 9
         #             11, 10, 12
-        self.input_layer = np.array([[-0.03, 0.03, -0.01], [0.04, -0.02, 0.01], [.03, 0.02, -0.02]])
-        # # order is w1, w2, w3, w0
-        # self.weights = []
-        self.output_layer = np.array([[-0.01, 0.03, 0.02, 0.02]])
+        # self.input_layer = np.array([[-0.03, 0.03, -0.01], [0.04, -0.02, 0.01], [.03, 0.02, -0.02]])
+        # # # order is w1, w2, w3, w0
+        # # self.weights = []
+        # self.output_layer = np.array([[-0.01, 0.03, 0.02, 0.02]])
 
         # self.weights = np.array(self.weights)
         ## Note on Weights ##
@@ -54,6 +58,7 @@ class BackProp(SupervisedLearner):
         self.batch_norm_enabled = batch_norm
         self.has_hidden = num_hidden_layers > 1
         self.model_type = "BackProp"
+        self.learn_until = 50
 
     @staticmethod
     def add_bias_to_features(features, numpy_array=False):
@@ -76,47 +81,58 @@ class BackProp(SupervisedLearner):
         """
         print("The learning rate for this model is {} \n with momentum {}".format(self.learning_rate,
                                                                                   self.momentum))
-        # only need n - 1 nodes
         self.output_classes = len(set(labels.col(labels.cols - 1)))
-        # # set up output layer => the number of classes by the size of the previous hidden layer
-        # self.output_layer = np.random.uniform(low=-0.1, high=0.1,
-        #                                       size=(self.output_classes, self.nodes_per_layer + 1))
-        # # setup input layer to match specs - number of nodes to connect to, number of inputs plus bias
-        # self.input_layer = np.random.uniform(low=-0.1, high=0.1,
-        #                                      size=(self.nodes_per_layer, features.cols + 1))
+        # set up output layer => the number of classes by the size of the previous hidden layer
+        self.output_layer = np.random.uniform(low=self.min, high=self.max,
+                                              size=(self.output_classes, self.nodes_per_layer + 1))
+        # setup input layer to match specs - number of nodes to connect to, number of inputs plus bias
+        self.input_layer = np.random.uniform(low=self.min, high=self.max,
+                                             size=(self.nodes_per_layer, features.cols + 1))
         # setup output layer to match specs
         self.num_output_layers = labels.cols
         # create a new features set with a bias for training
         features_bias = Matrix(features, 0, 0, features.rows, features.cols)
         features_bias = self.add_bias_to_features(features_bias)
         last_row_num = features_bias.rows - 1
+        self._is_nominal_output = labels.value_count(0) != 0
 
         # start learning
         while self._is_still_learning(self):
-            print(" #### On Epoch Number {} with weights \n{}\n".format(self.epoch_count, self.hidden_layers))
+            print(" #### On Epoch Number {}".format(self.epoch_count))
             for row_num in range(features_bias.rows):
-                print("On input number {} #############".format(row_num))
-                row = features_bias.row(row_num + 1)
-                print("Feed Forward with row: {}".format(row))
+                #print("On input number {} #############".format(row_num + 1))
+                row = features_bias.row(row_num)
+                #print("Feed Forward with row: {}".format(row))
                 output = self._feed_forward(row)
-                print("backpropogating errors with output: {}".format(output))
+                #print("backpropogating errors with output: {}".format(output))
                 self._back_propagate(output, labels.row(row_num), row, self.batch_norm_enabled,
                                      (self.batch_norm_enabled and row_num == last_row_num))
-            accuracy_for_epoch: float =  self.measure_accuracy(features, labels)
+            accuracy_for_epoch: float = self.measure_accuracy(features, labels)
+            if self.epoch_count > 1 and max(self.accuracy_hash.items(),
+                                             key=lambda x: x[1])[1] < accuracy_for_epoch:
+                self.best_inputs = self.input_layer
+                self.best_hidden = self.hidden_layers
+                self.best_output = self.output_layer
             self.accuracy_hash[str(self.epoch_count)] = accuracy_for_epoch
             self.epoch_count += 1
 
+        print("The best accuracy in training was {}".format(
+            max(self.accuracy_hash.items(), key = lambda x: x[1])))
+
+        self.input_layer = self.best_inputs
+        self.hidden_layers = self.best_hidden
+        self.output_layer = self.best_output
         return
 
     @staticmethod
     def _is_still_learning(self):
         margin_increasing = .01
-        if len(self.accuracy_hash) <= 5:
+        if len(self.accuracy_hash) <= self.learn_until:
             return True
         # check that the accuracy hasn't improved for 5 iterations
-        baseline: float = self.accuracy_hash[str(self.epoch_count - 5)]
+        baseline: float = self.accuracy_hash[str(self.epoch_count - self.learn_until)]
         # check the end point also
-        for iteration in range(self.epoch_count - 5, self.epoch_count):
+        for iteration in range(self.epoch_count - self.learn_until, self.epoch_count):
             if self.accuracy_hash[str(iteration)] - baseline > margin_increasing:
                 return True
         else:
@@ -212,7 +228,7 @@ class BackProp(SupervisedLearner):
     def _back_propagate(self, output, target, input, batch_norm, end_of_batch=False):
         # use np for array operations
         output = np.array(output)
-        target = np.array(target)
+        target = self._make_target(target)
         input = np.array(input)
         matrix_num = len(self.hidden_layers)
 
@@ -245,7 +261,7 @@ class BackProp(SupervisedLearner):
                                           delta_previous=delta_prev, weight_matrix=next_to_use_weights)
 
 
-        print("The error values are: \n {} \n {} \n {}".format(output_deltas, hidden_deltas, input_deltas))
+        #print("The error values are: \n {} \n {} \n {}".format(output_deltas, hidden_deltas, input_deltas))
 
         ###### Configure outputs ######
         if self.has_hidden:
@@ -305,12 +321,27 @@ class BackProp(SupervisedLearner):
         # print("Change in weights (including momentum) are \n {} \n {} \n {} \n".format(change_in_input_weights,
         #                                                           change_in_hidden_weights,
         #                                                           change_in_output_weights))
-        print("Done with backprop")
-        print("Weights are now \n {} \n {} \n {} \n".format(self.input_layer,
-                                                            self.hidden_layers,
-                                                            self.output_layer))
+        # print("Done with backprop")
+        # print("Weights are now \n {} \n {} \n {} \n".format(self.input_layer,
+        #                                                     self.hidden_layers,
+        #                                                     self.output_layer))
 
     def measure_accuracy(self, features, labels, confusion=None):
         return super(BackProp, self).measure_accuracy(features, labels)
+
+    def _make_target(self, target):
+        """
+
+        :param target: the value of the class given
+        :return:
+        """
+        if self._is_nominal_output:
+            if type(target) == list:
+                target = target[0]
+            target_array = np.zeros(len(self.output_layer))
+            target_array[int(target)] = 1
+            return np.array(target_array)
+        else:
+            return np.array(target)
 
 

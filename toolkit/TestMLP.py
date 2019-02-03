@@ -7,15 +7,19 @@ from .Backprop import BackProp
 from .MultiPerceptron import MultiPerceptron
 from .matrix import Matrix
 import time
+import numpy as np
+from scipy.interpolate import splrep, splev, spline
+
 
 
 class TestMLP(TestCase):
 
     data = Matrix()
     #data.load_arff("datasets/votingMissingValuesReplaced.arff")
-    data.load_arff("test/testbp2.arff")
+    #data.load_arff("test/testbp2.arff")
+    data.load_arff("datasets/vowel.arff")
     #data.load_arff("datasets/iris.arff")
-    learn = BackProp(num_hidden_layers=1, nodes_per_layer=3, momentum=.9, learning_rate=.175)
+    learn = BackProp(num_hidden_layers=1, nodes_per_layer=10, momentum=.0, learning_rate=.1)
 
     def test_complete(self):
         features = Matrix(self.data, 0, 0, self.data.rows, self.data.cols - 1)
@@ -26,18 +30,20 @@ class TestMLP(TestCase):
         elapsed_time = time.time() - start_time
         print("Time to train (in seconds): {}".format(elapsed_time))
         accuracy = self.learn.measure_accuracy(features, labels, confusion)
-        print("Training set accuracy: " + str(accuracy))
-        print("Weights for the Perceptron are: \n{}\n{}\n{}".format(self.learn.input_layer,
-                                                                    self.learn.hidden_layers,
-                                                                    self.learn.output_layer))
+        print("Input weights are: \n{}".format(self.learn.input_layer))
         print("Accuracy is: {}".format(self.learn.accuracy_hash))
+        print("Training set accuracy: " + str(accuracy))
         plot_data(features.data, labels.data, self.learn.hidden_layers)
         # plot the answers
         import matplotlib.pylab as plt
         mis = {key: 1 - self.learn.accuracy_hash[key] for key in self.learn.accuracy_hash.keys()}
         lists = sorted(mis.items())  # sorted by key, return a list of tuples
         x, y = zip(*lists)  # unpack a list of pairs into two tuples
+        from scipy.interpolate import make_interp_spline, BSpline
         plt.plot(x, y)
+        my_xticks = np.array(x)
+        frequency = 20
+        plt.xticks(x[::frequency], my_xticks[::frequency])
         plt.xlabel('Epoch')
         plt.ylabel('Misclassification Rate')
         plt.title('Training Misclassification')
