@@ -12,8 +12,9 @@ class BackProp(SupervisedLearner):
     """
 
 
-    def __init__(self, nodes_per_layer=3, num_hidden_layers=1, momentum=.0, learning_rate=.1,
-                 batch_norm = False):
+    def __init__(self, nodes_per_layer=32, num_hidden_layers=4, momentum=.05, learning_rate=.1,
+                 batch_norm=False, validation_set=True):
+        self.validation_set = validation_set
         self.min = -.05
         self.max = .05
         self.output_layer = np.ndarray
@@ -30,8 +31,8 @@ class BackProp(SupervisedLearner):
         # self.weights = [[[-0.2, -0.3, 0.1], [-0.1, 0.3, 0.2]]]
         # self.output_layer =  [[-0.1, 0.3, 0.2], [-0.2, -0.3, 0.1]]
 
-
-
+        ## Note on Weights ##
+        # Weights are organized backwards = the top of the array is the leftmost(bottom) layer
         # these weights are for testbp2.arff
         # ordering is 5, 4, 6
         #             8, 7, 9
@@ -40,10 +41,9 @@ class BackProp(SupervisedLearner):
         # # # order is w1, w2, w3, w0
         # # self.weights = []
         # self.output_layer = np.array([[-0.01, 0.03, 0.02, 0.02]])
-
         # self.weights = np.array(self.weights)
-        ## Note on Weights ##
-        # Weights are organized backwards = the top of the array is the leftmost(bottom) layer
+
+        self.accuracy_hash_train = {}
         self.nodes_per_layer = nodes_per_layer
         self.num_hidden_layers = num_hidden_layers
         self.accuracy_hash = {}
@@ -57,6 +57,7 @@ class BackProp(SupervisedLearner):
         self.output_classes = 0
         self.batch_norm_enabled = batch_norm
         self.has_hidden = num_hidden_layers > 1
+        self.MSE = True
         self.model_type = "BackProp"
         self.learn_until = 50
 
@@ -81,66 +82,108 @@ class BackProp(SupervisedLearner):
         """
         print("The learning rate for this model is {} \n with momentum {}".format(self.learning_rate,
                                                                                   self.momentum))
+        features_bias = Matrix(features, 0, 0, features.rows, features.cols)
+        features_bias = self.add_bias_to_features(features_bias)
+
+        #### Prepare Validation Set ####
+        if self.validation_set:
+            features_bias.shuffle(buddy=labels)
+
+            test_size = int(.1 * features_bias.rows)
+            train_features = Matrix(features_bias, 0, 0, features_bias.rows - test_size, features_bias.cols)
+            train_features = self.add_bias_to_features(train_features)
+            train_labels = Matrix(labels, 0, 0, features_bias.rows - test_size, labels.cols)
+
+            test_features = Matrix(features_bias, test_size, 0, test_size, features_bias.cols)
+            test_features = self.add_bias_to_features(test_features)
+            test_labels = Matrix(labels, test_size, 0, test_size, labels.cols)
+
+
+
+
+        ##### Setup Weights #####
         self.output_classes = len(set(labels.col(labels.cols - 1)))
         # set up output layer => the number of classes by the size of the previous hidden layer
         self.output_layer = np.random.uniform(low=self.min, high=self.max,
                                               size=(self.output_classes, self.nodes_per_layer + 1))
         # setup input layer to match specs - number of nodes to connect to, number of inputs plus bias
         self.input_layer = np.random.uniform(low=self.min, high=self.max,
-                                             size=(self.nodes_per_layer, features.cols + 1))
+                                             size=(self.nodes_per_layer, features_bias.cols + 1))
         # setup output layer to match specs
         self.num_output_layers = labels.cols
         # create a new features set with a bias for training
-        features_bias = Matrix(features, 0, 0, features.rows, features.cols)
-        features_bias = self.add_bias_to_features(features_bias)
         last_row_num = features_bias.rows - 1
         self._is_nominal_output = labels.value_count(0) != 0
+
+        self.best_inputs = self.input_layer
+        self.best_hidden = self.hidden_layers
+        self.best_output = self.output_layer
+
+        if not self.validation_set:
+            train_features = features_bias
+            test_features = features_bias
+            train_labels = labels
+            test_labels = labels
 
         # start learning
         while self._is_still_learning(self):
             print(" #### On Epoch Number {}".format(self.epoch_count))
-            for row_num in range(features_bias.rows):
+            train_features.shuffle(buddy=train_labels)
+            for row_num in range(train_features.rows):
                 #print("On input number {} #############".format(row_num + 1))
-                row = features_bias.row(row_num)
+                row = train_features.row(row_num)
                 #print("Feed Forward with row: {}".format(row))
                 output = self._feed_forward(row)
                 #print("backpropogating errors with output: {}".format(output))
-                self._back_propagate(output, labels.row(row_num), row, self.batch_norm_enabled,
+                self._back_propagate(output, train_labels.row(row_num), row, self.batch_norm_enabled,
                                      (self.batch_norm_enabled and row_num == last_row_num))
-            accuracy_for_epoch: float = self.measure_accuracy(features, labels)
-            if self.epoch_count > 1 and max(self.accuracy_hash.items(),
-                                             key=lambda x: x[1])[1] < accuracy_for_epoch:
-                self.best_inputs = self.input_layer
-                self.best_hidden = self.hidden_layers
-                self.best_output = self.output_layer
-            self.accuracy_hash[str(self.epoch_count)] = accuracy_for_epoch
+            # test on validation set
+            accuracy_for_epoch: float = self.measure_accuracy(test_features, test_labels, MSE=self.MSE)
+            accuracy_for_epoch_train: float = self.measure_accuracy(train_features, train_labels, MSE=self.MSE)
+            if self.epoch_count > 1:
+                if (self.MSE and min(self.accuracy_hash.items(), key=lambda x: x[1])[1] < accuracy_for_epoch) or (not self.MSE and max(self.accuracy_hash.items(), key=lambda x: x[1])[1] < accuracy_for_epoch):
+                    self.best_inputs = self.input_layer
+                    self.best_hidden = self.hidden_layers
+                    self.best_output = self.output_layer
+            self.accuracy_hash[self.epoch_count] = accuracy_for_epoch
+            self.accuracy_hash_train[self.epoch_count] = accuracy_for_epoch_train
+
             self.epoch_count += 1
 
-        print("The best accuracy in training was {}".format(
+        print("The best accuracy on the validation set was {}".format(
             max(self.accuracy_hash.items(), key = lambda x: x[1])))
 
         self.input_layer = self.best_inputs
         self.hidden_layers = self.best_hidden
         self.output_layer = self.best_output
+
+        final_vs: float = self.measure_accuracy(test_features, test_labels, MSE=self.MSE)
+        final_ts: float = self.measure_accuracy(train_features, train_labels, MSE=self.MSE)
+        print("The final best for VS: {} and for TS: {}".format(final_vs, final_ts))
+
         return
 
     @staticmethod
     def _is_still_learning(self):
-        margin_increasing = .01
+        margin_increasing = .005
         if len(self.accuracy_hash) <= self.learn_until:
             return True
         # check that the accuracy hasn't improved for 5 iterations
-        baseline: float = self.accuracy_hash[str(self.epoch_count - self.learn_until)]
+        baseline: float = self.accuracy_hash[self.epoch_count - self.learn_until]
         # check the end point also
         for iteration in range(self.epoch_count - self.learn_until, self.epoch_count):
-            if self.accuracy_hash[str(iteration)] - baseline > margin_increasing:
-                return True
+            if self.MSE:
+                if self.accuracy_hash[iteration] - baseline < -1 * margin_increasing:
+                    return True
+            else:
+                if self.accuracy_hash[iteration] - baseline > margin_increasing:
+                    return True
         else:
             return False
 
     @staticmethod
     def output_sigmoid(net):
-        return 1 / (1 + np.exp(-net))
+        return net if net > 0 else 0
 
     def predict(self, features, labels, individual_pred=True):
         """
@@ -326,8 +369,8 @@ class BackProp(SupervisedLearner):
         #                                                     self.hidden_layers,
         #                                                     self.output_layer))
 
-    def measure_accuracy(self, features, labels, confusion=None):
-        return super(BackProp, self).measure_accuracy(features, labels)
+    def measure_accuracy(self, features, labels, confusion=None, MSE=None):
+        return super(BackProp, self).measure_accuracy(features, labels, MSE=MSE)
 
     def _make_target(self, target):
         """

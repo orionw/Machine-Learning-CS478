@@ -19,36 +19,58 @@ class TestMLP(TestCase):
     #data.load_arff("test/testbp2.arff")
     data.load_arff("datasets/vowel.arff")
     #data.load_arff("datasets/iris.arff")
-    learn = BackProp(num_hidden_layers=1, nodes_per_layer=10, momentum=.0, learning_rate=.1)
+    learn = BackProp()
 
     def test_complete(self):
-        features = Matrix(self.data, 0, 0, self.data.rows, self.data.cols - 1)
-        labels = Matrix(self.data, 0, self.data.cols - 1, self.data.rows, self.data.cols)
-        confusion = Matrix()
+        # 75/25 split
+        train_size = int(.75 * self.data.rows)
+        train_features = Matrix(self.data, 0, 0, train_size, self.data.cols - 1)
+        train_labels = Matrix(self.data, 0, self.data.cols - 1, train_size, 1)
+
+        test_features = Matrix(self.data, train_size, 0, self.data.rows - train_size, self.data.cols - 1)
+        test_labels = Matrix(self.data, train_size, self.data.cols - 1, self.data.rows - train_size, 1)
+
         start_time = time.time()
-        self.learn.train(features, labels)
+        self.learn.train(train_features, train_labels)
         elapsed_time = time.time() - start_time
         print("Time to train (in seconds): {}".format(elapsed_time))
-        accuracy = self.learn.measure_accuracy(features, labels, confusion)
-        print("Input weights are: \n{}".format(self.learn.input_layer))
-        print("Accuracy is: {}".format(self.learn.accuracy_hash))
-        print("Training set accuracy: " + str(accuracy))
-        plot_data(features.data, labels.data, self.learn.hidden_layers)
+
+        # train_accuracy = self.learn.measure_accuracy(train_features, train_labels, MSE=True)
+        # print("Training set accuracy: {}".format(train_accuracy))
+
+        confusion = Matrix()
+        test_accuracy = self.learn.measure_accuracy(test_features, test_labels, confusion, MSE=True)
+        print("Test set accuracy: {}".format(test_accuracy))
+
+        print("Epochs are: {}".format(self.learn.epoch_count))
+
+        print("Accuracy is: train {} \n and test {}".format(self.learn.accuracy_hash,
+                                                         self.learn.accuracy_hash_train))
+
         # plot the answers
         import matplotlib.pylab as plt
-        mis = {key: 1 - self.learn.accuracy_hash[key] for key in self.learn.accuracy_hash.keys()}
+        # validation set misclassification
+        mis = {key: self.learn.accuracy_hash[key] for key in self.learn.accuracy_hash.keys()}
         lists = sorted(mis.items())  # sorted by key, return a list of tuples
         x, y = zip(*lists)  # unpack a list of pairs into two tuples
-        from scipy.interpolate import make_interp_spline, BSpline
+
+        # training misclassification
+        mis = {key: self.learn.accuracy_hash_train[key] for key in self.learn.accuracy_hash_train.keys()}
+        lists = sorted(mis.items())  # sorted by key, return a list of tuples
+        x_train, y_train = zip(*lists)  # unpack a list of pairs into two tuples
+
+
         plt.plot(x, y)
+        plt.plot(x_train, y_train)
         my_xticks = np.array(x)
         frequency = 20
         plt.xticks(x[::frequency], my_xticks[::frequency])
         plt.xlabel('Epoch')
-        plt.ylabel('Misclassification Rate')
-        plt.title('Training Misclassification')
+        plt.ylabel('MSE')
+        plt.title('MSE Across Number of Hidden Nodes')
         axes = plt.gca()
         axes.set_ylim([0, 1])
+        axes.legend(['VS MSE', 'Training MSE'])
         plt.show()
 
         print('#### done ####')

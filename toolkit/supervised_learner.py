@@ -28,7 +28,7 @@ class SupervisedLearner:
         """
         raise NotImplementedError
 
-    def measure_accuracy(self, features, labels, confusion=None):
+    def measure_accuracy(self, features, labels, confusion=None, MSE=None):
         """
         The model must be trained before you call this method. If the label is nominal,
         it returns the predictive accuracy. If the label is continuous, it returns
@@ -56,16 +56,18 @@ class SupervisedLearner:
             pass
 
         label_values_count = labels.value_count(0)
-        if label_values_count == 0:
+        if MSE or not label_values_count:
             # label is continuous
             pred = [0]
             sse = 0.0
             for i in range(features.rows):
                 feat = features.row(i)
-                targ = labels.row(i)
+                targ = labels.row(i)[0]
+                targ_real = np.zeros(self.output_classes)
+                targ_real[int(targ)] = 1
                 pred[0] = 0.0       # make sure the prediction is not biased by a previous prediction
-                self.predict(feat, pred)
-                delta = targ[0] - pred[0]
+                pred = self.predict(feat, pred)
+                delta = targ_real[0] - pred[0]
                 sse += delta**2
             return math.sqrt(sse / features.rows)
 
@@ -86,8 +88,7 @@ class SupervisedLearner:
                 if type(pred[0]) == np.float64:
                     # use a round/softmax
                     max_index = np.argmax(pred)
-                    # TODO: implement a SOFTMAX
-                    pred = [max_index if round(pred[max_index]) else ValueError]
+                    pred = [max_index if math.ceil(pred[max_index]) else ValueError]
                 pred = (pred[0])
                 # if confusion:
                 #      confusion.set(targ, pred, confusion.get(targ, pred)+1)
