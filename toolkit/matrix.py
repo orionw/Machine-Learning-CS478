@@ -1,9 +1,14 @@
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 
 import random
+
+import numpy
 import numpy as np
 import re
 import os
+
+import pandas
+
 
 def mode(a, axis=0):
 # taken from scipy code
@@ -273,3 +278,22 @@ class Matrix:
             # values = list(map(lambda j: str(r[j]) if self.value_count(j) == 0 else self.enum_to_str[j][r[j]],
             #                   range(len(r))))
             print("{}".format(", ".join(values)))
+
+    """
+    :returns list of all the elements, shape of the data frame, and column names of the data frame
+    """
+    def to_list(self):
+        output_list = []
+        row_length = 0
+        col_length = len(self.data[0])
+        for row in self.data:
+            output_list += row
+            row_length += 1
+
+        col_names = self.attr_names
+        return output_list, tuple((row_length, col_length)), col_names
+
+    def return_pandas_df(self):
+        my_list, shape, columns = self.to_list()
+        df = pandas.DataFrame(numpy.array(my_list).reshape(shape), columns=columns)
+        return df

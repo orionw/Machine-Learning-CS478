@@ -1,6 +1,10 @@
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 
 from unittest import TestCase,TestLoader,TextTestRunner
+
+import numpy
+import pandas
+
 from .matrix import Matrix
 
 
@@ -55,6 +59,14 @@ class TestMatrix(TestCase):
         t = Matrix()
         t.load_arff("test/cm1_req.arff")
         self.assertListEqual(t.row(t.rows-1), [1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 3.0, 1.0, 1.0])
+
+    def test_to_pandas(self):
+        t = Matrix()
+        t.load_arff("test/cm1_req.arff")
+        self.assertListEqual(t.row(t.rows - 1), [1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 3.0, 1.0, 1.0])
+        my_list, shape, columns = t.to_list()
+        df = pandas.DataFrame(numpy.array(my_list).reshape(shape), columns=columns)
+        assert(df.shape == shape)
 
     def test_rows(self):
         self.assertEquals(self.m.rows, 3)

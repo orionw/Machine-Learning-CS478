@@ -4,9 +4,9 @@ import numpy as np
 import matplotlib as plt
 import operator
 from scipy.io.arff import loadarff
+import pandas as pd
 
-# raw_data = loadarff('Training Dataset.arff')
-# df_data = pd.DataFrame(raw_data[0])
+
 
 
 class DecisionTree(SupervisedLearner):
@@ -25,7 +25,8 @@ class DecisionTree(SupervisedLearner):
         :type labels: Matrix
         """
         test_features, test_labels, train_features, train_labels = self.get_training_sets(features, labels)
-        fitted_tree = self._fit_tree(train_features, train_labels)
+        self.fitted_tree = Tree(train_features, train_labels)
+        print("Tree Fitted")
 
 
     def predict(self, features, labels):
@@ -33,16 +34,14 @@ class DecisionTree(SupervisedLearner):
         :type features: [float]
         :type labels: [float]
         """
-        del labels[:]
-        labels += self.labels
-        return labels
+        return [self.fitted_tree.execute(features)]
 
-    def measure_accuracy(self, features, labels, confusion=None, MSE=None):
+    def measure_accuracy(self, features, labels, confusion=None, MSE=False):
         return super(DecisionTree, self).measure_accuracy(features, labels, MSE=MSE)
 
     def get_training_sets(self, features, labels):
         features_bias = Matrix(features, 0, 0, features.rows, features.cols)
-        features_bias = self.add_bias_to_features(features_bias)
+        # features_bias = self.add_bias_to_features(features_bias)
 
         #### Prepare Validation Set ####
         if self.validation_set:
@@ -57,7 +56,15 @@ class DecisionTree(SupervisedLearner):
             test_features = self.add_bias_to_features(test_features)
             test_labels = Matrix(labels, test_size, 0, test_size, labels.cols)
 
+            train_features = train_features.return_pandas_df()
+            train_labels = train_labels.return_pandas_df()
+            test_features = test_features.return_pandas_df()
+            test_labels = test_labels.return_pandas_df()
+
         if not self.validation_set:
+            features_bias = features_bias.return_pandas_df()
+            labels = labels.return_pandas_df()
+
             train_features = features_bias
             test_features = features_bias
             train_labels = labels
@@ -79,38 +86,82 @@ class DecisionTree(SupervisedLearner):
                 row = numpy_array.append(row, [1])
             return features
 
-    def _fit_tree(self, train_features, train_labels):
-        dataset_info = self._get_info(train_labels, "all")
+
+
+class Node:
+
+    def __init__(self, col_index, features, labels, depth):
+        if col_index is None:
+            self.start_node = True
+        else:
+            self.start_node = False
+
+        self.rule_column_index = col_index
+        if int(labels.nunique()) == 1:
+            self.index_value_map = int(labels.iloc[:, 0].unique()[0])
+        else:
+            best_index_gain = self.get_info_gain(features, labels)
+            self.index_value_map = {}
+            if depth != 0:
+                for index, unique_val in enumerate(features.iloc[:, best_index_gain].unique()):
+                    cols_to_index = features.iloc[:, best_index_gain] == unique_val
+                    self.index_value_map[index] = Node(best_index_gain,
+                                                       features[cols_to_index],
+                                                       labels[cols_to_index],
+                                                       depth - 1)
+
+        return
+
+    def execute(self, row):
+        if not self.is_leaf_node():
+            if self.start_node:
+                return self.index_value_map[0].execute(row)
+            else:
+                value = int(row[self.rule_column_index])
+                if type(self.index_value_map) == dict:
+                    return self.index_value_map[value].execute(row)
+                else:
+                    return self.index_value_map
+        else:
+            return self.index_value_map
+
+    def get_info_gain(self, train_features, train_labels):
+        dataset_info = self._get_info(np.array(train_labels), "all")
         column_gain = []
-        for col in range(train_features.cols):
-            column_gain.append(dataset_info - self._get_info(train_features.col(col), train_labels.data))
-            
+        for col in train_features:
+            if len(np.unique(train_features[col])) == 1:
+                column_gain.append(float("-inf"))
+            else:
+                column_gain.append(dataset_info - self._get_info(np.array(train_features[col]),
+                                                                 np.array(train_labels)))
+
         most_gain_index = column_gain.index(max(column_gain))
+        return most_gain_index
 
     def _get_info(self, column, labels):
-        if type(labels) != Matrix and labels == "all":
+        if type(labels) != np.ndarray and labels == "all":
             # this is the main dataset calculation
-            output_classes = np.zeros(column.value_count(0))
-            for value in column.data:
+            output_classes = np.zeros(len(np.unique(column)))
+            for value in column:
                 # remove the list part
-                value_real = value[0]
-                output_classes[int(value_real)] += 1
-            output_classes /= len(column.data)
+                output_classes[int(value)] += 1
+            output_classes /= len(column)
             info = self._calculate_entropy(output_classes)
         else:
             labels = [item for sublist in labels for item in sublist]
             classes_prop = np.zeros((len(np.unique(labels)), len(np.unique(column))))
             total_proportions = np.zeros(len(np.unique(column)))
+            mapper = np.unique(column)
             for index, value in enumerate(column):
                 label_ind = labels[index]
-                classes_prop[int(label_ind)][int(value)] += 1
-                total_proportions[int(value)] += 1
+                classes_prop[int(label_ind)][np.where(mapper==int(value))] += 1
+                total_proportions[np.where(mapper==int(value))] += 1
             # transpose and divide by the number in column class
-            classes_prop / total_proportions.T
+            classes_prop /= total_proportions
             # divide column counts by column overall to get proportion
             total_proportions /= len(column)
             info = self._calculate_entropy(classes_prop, total_proportions)
-        return
+        return info
 
     def _calculate_entropy(self, output_classes, total_proportions=None):
         info = 0
@@ -118,12 +169,23 @@ class DecisionTree(SupervisedLearner):
             for proportion in output_classes:
                 info -= proportion * np.log2(proportion)
         else:
-            for index, proportion in enumerate(output_classes):
-                info -= proportion * np.log2(proportion) * total_proportions[index]
+            for index, proportion in enumerate(output_classes.T):
+                next_info = np.dot(proportion, np.log2(proportion)) * total_proportions[index]
+                if np.isnan(next_info):
+                    next_info = 0
+                info -= next_info
 
         return info
-            
-        
+
+    def is_leaf_node(self):
+        return type(self.index_value_map) == int
 
 
+class Tree:
+
+    def __init__(self, features, labels):
+        self.start_node = Node(None, features, labels, depth=100)
+
+    def execute(self, row):
+        return self.start_node.execute(row)
 

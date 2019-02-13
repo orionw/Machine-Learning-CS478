@@ -47,8 +47,10 @@ class SupervisedLearner:
         if features.rows == 0:
             raise Exception("Expected at least one row")
 
+        backprop = False
         try:
             if self.model_type == "BackProp":
+                backprop = True
                 features_to_change = Matrix(features, 0, 0, features.rows, features.cols)
                 features = features_to_change
         except AttributeError as e:
@@ -85,7 +87,7 @@ class SupervisedLearner:
                 if targ >= label_values_count:
                     raise Exception("The label is out of range")
                 pred = self.predict(feat, prediction)
-                if type(pred[0]) == np.float64:
+                if backprop and type(pred[0]) == np.float64:
                     # use a round/softmax
                     max_index = np.argmax(pred)
                     pred = [max_index if math.ceil(pred[max_index]) else ValueError]

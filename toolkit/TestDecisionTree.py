@@ -37,7 +37,7 @@ class TestDecisionTree(TestCase):
         elapsed_time = time.time() - start_time
         print("Time to train (in seconds): {}".format(elapsed_time))
 
-        test_accuracy = self.learn.measure_accuracy(test_features, test_labels, MSE=True)
+        test_accuracy = self.learn.measure_accuracy(train_features, train_labels, MSE=False)
         print("Test set accuracy: {}".format(test_accuracy))
 
 

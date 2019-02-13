@@ -5,12 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2d513cd-19e0-4da7-bcfa-24e4620d01f3" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/toolkit/DecisionTree.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/toolkit/TestDecisionTree.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/toolkit/Backprop.py" beforeDir="false" afterPath="$PROJECT_DIR$/toolkit/Backprop.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/toolkit/TestMLP.py" beforeDir="false" afterPath="$PROJECT_DIR$/toolkit/TestMLP.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/toolkit/DecisionTree.py" beforeDir="false" afterPath="$PROJECT_DIR$/toolkit/DecisionTree.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/toolkit/TestDecisionTree.py" beforeDir="false" afterPath="$PROJECT_DIR$/toolkit/TestDecisionTree.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/toolkit/matrix.py" beforeDir="false" afterPath="$PROJECT_DIR$/toolkit/matrix.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/toolkit/supervised_learner.py" beforeDir="false" afterPath="$PROJECT_DIR$/toolkit/supervised_learner.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/toolkit/test_matrix.py" beforeDir="false" afterPath="$PROJECT_DIR$/toolkit/test_matrix.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,78 +25,95 @@
     <SUITE FILE_PATH="coverage/Machine_Learning_CS478$Unittests_for_toolkit_test_perceptron_TestPerceptronLearner_test_random.coverage" NAME="Unittests for toolkit.test_perceptron.TestPerceptronLearner.test_random Coverage Results" MODIFIED="1548363273571" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Machine_Learning_CS478$Unittests_in_test_perceptron_py.coverage" NAME="Unittests in test_perceptron.py Coverage Results" MODIFIED="1547928774844" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Machine_Learning_CS478$Unittests_for_toolkit_test_perceptron_TestPerceptronLearner_test_multi.coverage" NAME="Unittests for toolkit.test_perceptron.TestPerceptronLearner.test_multi Coverage Results" MODIFIED="1548210428324" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Machine_Learning_CS478$Unittests_in_TestDecisionTree_py.coverage" NAME="Unittests in TestDecisionTree.py Coverage Results" MODIFIED="1549775280325" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Machine_Learning_CS478$Unittests_for_toolkit_test_matrix_TestMatrix_test_to_pandas.coverage" NAME="Unittests for toolkit.test_matrix.TestMatrix.test_to_pandas Coverage Results" MODIFIED="1550025546192" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Machine_Learning_CS478$Unittests_in_TestDecisionTree_py.coverage" NAME="Unittests in TestDecisionTree.py Coverage Results" MODIFIED="1550029582177" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/toolkit/Backprop.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="75" column="27" lean-forward="true" selection-start-line="63" selection-start-column="4" selection-end-line="75" selection-end-column="27" />
-              <folding>
-                <element signature="e#0#56#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/toolkit/baseline_learner.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="24" column="21" selection-start-line="24" selection-start-column="21" selection-end-line="24" selection-end-column="21" />
-              <folding>
-                <element signature="e#0#84#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/toolkit/matrix.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="174">
-              <caret line="173" selection-start-line="173" selection-end-line="173" />
+            <state relative-caret-position="272">
+              <caret line="297" selection-start-line="297" selection-end-line="297" />
               <folding>
                 <element signature="e#0#84#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/tennis.arff">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/toolkit/test_matrix.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="231">
+              <caret line="66" column="45" lean-forward="true" selection-start-line="66" selection-start-column="45" selection-end-line="66" selection-end-column="45" />
+              <folding>
+                <element signature="e#0#84#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/cm1_req.arff">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/toolkit/TestDecisionTree.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="125">
+              <caret line="39" selection-start-line="39" selection-end-line="39" />
+              <folding>
+                <element signature="e#0#84#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/toolkit/DecisionTree.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="125">
+              <caret line="36" selection-start-line="36" selection-end-line="36" />
+              <folding>
+                <element signature="e#0#56#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/toolkit/DecisionTree.py">
+        <entry file="file://$PROJECT_DIR$/toolkit/supervised_learner.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="231">
+              <caret line="89" selection-start-line="89" selection-end-line="89" />
+              <folding>
+                <element signature="e#0#84#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://C:/ProgramData/Anaconda3/Lib/site-packages/pandas/core/generic.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="125">
-              <caret line="112" selection-start-line="112" selection-end-line="112" />
-              <folding>
-                <element signature="e#0#56#0" expanded="true" />
-              </folding>
+              <caret line="4365" selection-start-line="4365" selection-end-line="4365" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/toolkit/TestMLP.py">
+        <entry file="file://C:/ProgramData/Anaconda3/Lib/site-packages/pandas/core/internals.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-616">
-              <caret line="13" selection-end-line="75" selection-end-column="31" />
-              <folding>
-                <element signature="e#0#84#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/toolkit/TestDecisionTree.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="89">
-              <caret line="35" selection-start-line="35" selection-end-line="35" />
-              <folding>
-                <element signature="e#0#84#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="133">
+              <caret line="4842" selection-start-line="4842" selection-end-line="4842" />
             </state>
           </provider>
         </entry>
@@ -104,38 +121,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://C:/ProgramData/Anaconda3/Lib/unittest/case.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="125">
-              <caret line="604" selection-start-line="604" selection-end-line="604" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/toolkit/test_perceptron.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="40">
-              <caret line="20" selection-start-line="20" selection-end-line="21" selection-end-column="76" />
-              <folding>
-                <element signature="e#0#84#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python36/site-packages/scipy/interpolate/_bsplines.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="16065">
-              <caret line="776" selection-start-line="776" selection-end-line="776" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/datasets/vowel.arff">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4116">
-              <caret line="196" selection-start-line="196" selection-end-line="196" />
+            <state relative-caret-position="146">
+              <caret line="606" selection-start-line="606" selection-end-line="606" />
             </state>
           </provider>
         </entry>
@@ -192,9 +179,7 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/toolkit/test_matrix.py" />
         <option value="$PROJECT_DIR$/toolkit/test_baseline_learner.py" />
-        <option value="$PROJECT_DIR$/toolkit/matrix.py" />
         <option value="$PROJECT_DIR$/datasets/linearly-seperable-data.arff" />
         <option value="$PROJECT_DIR$/datasets/not-linearly-seperable-data.arff" />
         <option value="$PROJECT_DIR$/datasets/iris_small.arff" />
@@ -207,17 +192,20 @@
         <option value="$PROJECT_DIR$/test/testbp2.arff" />
         <option value="$PROJECT_DIR$/toolkit/manager.py" />
         <option value="$PROJECT_DIR$/datasets/vowel.arff" />
-        <option value="$PROJECT_DIR$/toolkit/supervised_learner.py" />
         <option value="$PROJECT_DIR$/toolkit/TestMLP.py" />
         <option value="$PROJECT_DIR$/toolkit/Backprop.py" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_2.py" />
+        <option value="$PROJECT_DIR$/toolkit/test_matrix.py" />
+        <option value="$PROJECT_DIR$/toolkit/matrix.py" />
         <option value="$PROJECT_DIR$/toolkit/TestDecisionTree.py" />
+        <option value="$PROJECT_DIR$/toolkit/supervised_learner.py" />
         <option value="$PROJECT_DIR$/toolkit/DecisionTree.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-10" />
+    <option name="y" value="-10" />
     <option name="width" value="980" />
     <option name="height" value="1040" />
   </component>
@@ -298,7 +286,7 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Unittests for toolkit.test_perceptron.TestPerceptronLearner.test_complete" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for toolkit.test_matrix.TestMatrix.test_to_pandas" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="MachineLearningPython-CS478-" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -309,7 +297,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;toolkit.test_perceptron.TestPerceptronLearner.test_complete&quot;" />
+      <option name="_new_target" value="&quot;toolkit.test_matrix.TestMatrix.test_to_pandas&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
@@ -360,18 +348,18 @@
     </configuration>
     <list>
       <item itemvalue="Python tests.Unittests for toolkit.TestMLP.TestMLP.test_complete" />
-      <item itemvalue="Python tests.Unittests for toolkit.test_perceptron.TestPerceptronLearner.test_complete" />
       <item itemvalue="Python tests.Unittests for toolkit.test_perceptron.TestPerceptronLearner.test_multi" />
       <item itemvalue="Python tests.Unittests for toolkit.test_perceptron.TestPerceptronLearner.test_random" />
       <item itemvalue="Python tests.Unittests in TestDecisionTree.py" />
+      <item itemvalue="Python tests.Unittests for toolkit.test_matrix.TestMatrix.test_to_pandas" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python tests.Unittests in TestDecisionTree.py" />
+        <item itemvalue="Python tests.Unittests for toolkit.test_matrix.TestMatrix.test_to_pandas" />
         <item itemvalue="Python tests.Unittests for toolkit.TestMLP.TestMLP.test_complete" />
         <item itemvalue="Python tests.Unittests for toolkit.test_perceptron.TestPerceptronLearner.test_random" />
         <item itemvalue="Python tests.Unittests for toolkit.test_perceptron.TestPerceptronLearner.test_multi" />
-        <item itemvalue="Python tests.Unittests for toolkit.test_perceptron.TestPerceptronLearner.test_complete" />
       </list>
     </recent_temporary>
   </component>
@@ -404,55 +392,58 @@
       <workItem from="1549578328981" duration="2262000" />
       <workItem from="1549646182583" duration="3000" />
       <workItem from="1549744970746" duration="6000" />
-      <workItem from="1549771091897" duration="3709000" />
+      <workItem from="1549771091897" duration="3918000" />
+      <workItem from="1549896729846" duration="1253000" />
+      <workItem from="1549936267818" duration="2794000" />
+      <workItem from="1550014582525" duration="7416000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.09 at 22h 00m 59s.xml">
+    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.12 at 20h 38m 34s.xml">
       <configuration name="Unittests in TestDecisionTree.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.09 at 22h 01m 59s.xml">
+    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.12 at 20h 39m 00s.xml">
       <configuration name="Unittests in TestDecisionTree.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.09 at 22h 02m 21s.xml">
+    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.12 at 20h 40m 21s.xml">
       <configuration name="Unittests in TestDecisionTree.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.09 at 22h 03m 32s.xml">
+    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.12 at 20h 40m 37s.xml">
       <configuration name="Unittests in TestDecisionTree.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.09 at 22h 04m 00s.xml">
+    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.12 at 20h 41m 26s.xml">
       <configuration name="Unittests in TestDecisionTree.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.09 at 22h 04m 13s.xml">
+    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.12 at 20h 43m 22s.xml">
       <configuration name="Unittests in TestDecisionTree.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.09 at 22h 05m 36s.xml">
+    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.12 at 20h 43m 33s.xml">
       <configuration name="Unittests in TestDecisionTree.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.09 at 22h 07m 00s.xml">
+    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.12 at 20h 44m 45s.xml">
       <configuration name="Unittests in TestDecisionTree.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.09 at 22h 07m 24s.xml">
+    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.12 at 20h 46m 21s.xml">
       <configuration name="Unittests in TestDecisionTree.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.09 at 22h 07m 44s.xml">
+    <history-entry file="Unittests_in_TestDecisionTree_py - 2019.02.12 at 20h 46m 38s.xml">
       <configuration name="Unittests in TestDecisionTree.py" configurationId="tests" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="146811000" />
+    <option name="totallyTimeSpent" value="158483000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.3161074" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.33020133" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286119" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3286119" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.39943343" />
+      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.398017" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -532,18 +523,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/toolkit/matrix.py</url>
-          <line>70</line>
+          <line>75</line>
           <option name="timeStamp" value="264" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/toolkit/supervised_learner.py</url>
-          <line>64</line>
-          <option name="timeStamp" value="276" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/toolkit/DecisionTree.py</url>
-          <line>112</line>
-          <option name="timeStamp" value="285" />
+          <line>89</line>
+          <option name="timeStamp" value="324" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -556,9 +542,10 @@
     </breakpoint-manager>
     <watches-manager>
       <configuration name="tests">
-        <watch expression="_get_info" language="Python" />
-        <watch expression="len(np.unique(column))" language="Python" />
-        <watch expression="len(np.unique(labels))" language="Python" />
+        <watch expression="self.index_value_map[value]" language="Python" />
+        <watch expression="int(row[self.rule_column_index])" language="Python" />
+        <watch expression="self.index_value_map[value].execute(row)" language="Python" />
+        <watch expression="self.index_value_map" language="Python" />
       </configuration>
     </watches-manager>
   </component>
@@ -617,52 +604,52 @@
     </expressions>
     <expressions id="watch">
       <expression>
-        <expression-string>len(np.unique(labels))</expression-string>
+        <expression-string>int(row[self.rule_column_index])</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>len(np.unique(column))</expression-string>
+        <expression-string>self.index_value_map[value]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>_get_info</expression-string>
+        <expression-string>self.index_value_map[value].execute(row)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>labels</expression-string>
+        <expression-string>self.index_value_map</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>train_features.data</expression-string>
+        <expression-string>train_features.columns</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>int(value)</expression-string>
+        <expression-string>np.unique(column)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>column.data</expression-string>
+        <expression-string>column.unique()</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>len(column.data)</expression-string>
+        <expression-string>float(&quot;-inf&quot;)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>column.data[1]</expression-string>
+        <expression-string>float(-&quot;inf&quot;)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>self.accuracy_hash</expression-string>
+        <expression-string>float(-inf)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -725,16 +712,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="294">
           <caret line="18" column="16" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#84#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/toolkit/test_matrix.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="3" column="26" selection-start-line="3" selection-start-column="26" selection-end-line="3" selection-end-column="26" />
           <folding>
             <element signature="e#0#84#0" expanded="true" />
           </folding>
@@ -869,16 +846,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/toolkit/supervised_learner.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1806">
-          <caret line="90" selection-start-line="90" selection-end-line="90" />
-          <folding>
-            <element signature="e#0#84#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/toolkit/manager.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2646">
@@ -910,20 +877,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/toolkit/baseline_learner.py">
+    <entry file="file://$PROJECT_DIR$/../../CS312/proj3-network-routing/proj3-network-routing/NetworkRoutingSolver.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../CS312/proj3-network-routing/proj3-network-routing/Proj3GUI.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="24" column="21" selection-start-line="24" selection-start-column="21" selection-end-line="24" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#84#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="105">
+          <caret line="24" column="15" selection-start-line="24" selection-start-column="15" selection-end-line="24" selection-end-column="15" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/toolkit/Backprop.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="75" column="27" lean-forward="true" selection-start-line="63" selection-start-column="4" selection-end-line="75" selection-end-column="27" />
+        <state relative-caret-position="1575">
+          <caret line="75" column="27" selection-start-line="63" selection-start-column="4" selection-end-line="75" selection-end-column="27" />
           <folding>
             <element signature="e#0#56#0" expanded="true" />
           </folding>
@@ -932,7 +899,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/toolkit/TestMLP.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-616">
+        <state relative-caret-position="273">
           <caret line="13" selection-end-line="75" selection-end-column="31" />
           <folding>
             <element signature="e#0#84#0" expanded="true" />
@@ -942,7 +909,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/toolkit/test_perceptron.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
+        <state relative-caret-position="420">
           <caret line="20" selection-start-line="20" selection-end-line="21" selection-end-column="76" />
           <folding>
             <element signature="e#0#84#0" expanded="true" />
@@ -950,27 +917,67 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/ProgramData/Anaconda3/Lib/unittest/case.py">
+    <entry file="file://$PROJECT_DIR$/toolkit/baseline_learner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="604" selection-start-line="604" selection-end-line="604" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/toolkit/matrix.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="173" selection-start-line="173" selection-end-line="173" />
+        <state relative-caret-position="441">
+          <caret line="24" column="21" selection-start-line="24" selection-start-column="21" selection-end-line="24" selection-end-column="21" />
           <folding>
             <element signature="e#0#84#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test/cm1_req.arff">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://C:/ProgramData/Anaconda3/Lib/site-packages/pandas/core/internals.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="4842" selection-start-line="4842" selection-end-line="4842" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/tennis.arff">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/toolkit/test_matrix.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="66" column="45" lean-forward="true" selection-start-line="66" selection-start-column="45" selection-end-line="66" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#84#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/toolkit/matrix.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="297" selection-start-line="297" selection-end-line="297" />
+          <folding>
+            <element signature="e#0#84#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/ProgramData/Anaconda3/Lib/site-packages/pandas/core/generic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="4365" selection-start-line="4365" selection-end-line="4365" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/ProgramData/Anaconda3/Lib/unittest/case.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="146">
+          <caret line="606" selection-start-line="606" selection-end-line="606" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/toolkit/TestDecisionTree.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="89">
-          <caret line="35" selection-start-line="35" selection-end-line="35" />
+        <state relative-caret-position="125">
+          <caret line="39" selection-start-line="39" selection-end-line="39" />
           <folding>
             <element signature="e#0#84#0" expanded="true" />
           </folding>
@@ -980,9 +987,19 @@
     <entry file="file://$PROJECT_DIR$/toolkit/DecisionTree.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="125">
-          <caret line="112" selection-start-line="112" selection-end-line="112" />
+          <caret line="36" selection-start-line="36" selection-end-line="36" />
           <folding>
             <element signature="e#0#56#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/toolkit/supervised_learner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="89" selection-start-line="89" selection-end-line="89" />
+          <folding>
+            <element signature="e#0#84#0" expanded="true" />
           </folding>
         </state>
       </provider>
