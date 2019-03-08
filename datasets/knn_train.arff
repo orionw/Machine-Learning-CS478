@@ -1,0 +1,8 @@
+@RELATION knntrain
+
+@ATTRIBUTE x	REAL
+@ATTRIBUTE y 	REAL
+@ATTRIBUTE class {A, B}
+
+@DATA
+2, 6, A

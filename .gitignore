@@ -2,9 +2,10 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-
+*ipynb
 # C extensions
 *.so
+.ipynb_checkpoints/
 
 # Distribution / packaging
 .Python

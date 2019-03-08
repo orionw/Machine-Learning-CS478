@@ -10,6 +10,7 @@ from toolkit.Backprop import BackProp
 # from toolkit.hac_cluster_learner import HACClusterLearner
 from toolkit.instance_based_learner import InstanceBasedLearner
 from toolkit.matrix import Matrix
+from toolkit.DecisionTree import DecisionTree
 import random
 import argparse
 import time
@@ -34,7 +35,7 @@ class MLSystemManager:
             "perceptron": Perceptron(),
             "multiperceptron": MultiPerceptron(),
             "backprop": BackProp(),
-            # "decisiontree": DecisionTreeLearner(),
+            "decisiontree": DecisionTree(),
             "knn": InstanceBasedLearner(),
             # "k_means": KMeansClusterLearner(),
             # "hac": HACClusterLearner()

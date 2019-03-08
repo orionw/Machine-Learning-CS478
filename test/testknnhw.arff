@@ -1,0 +1,8 @@
+@relation knn_hw
+
+@attribute X real
+@attribute Y real
+@attribute Output real
+
+@data
+.5, .2, .7

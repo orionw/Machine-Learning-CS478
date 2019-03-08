@@ -46,7 +46,7 @@ class Matrix:
     str_to_enum = []       # array of dictionaries
     enum_to_str = []       # array of dictionaries
     dataset_name = "Untitled"
-    MISSING = float("infinity")
+    MISSING = np.NaN
 
     def __init__(self, matrix=None, row_start=None, col_start=None, row_count=None, col_count=None, arff=None):
         """

@@ -1,0 +1,11 @@
+@RELATION knntest
+
+@ATTRIBUTE x	REAL
+@ATTRIBUTE y 	REAL
+@ATTRIBUTE class {A, B}
+
+@DATA
+1, 5, A
+0, 8, B
+9, 9, B
+10, 10, A
