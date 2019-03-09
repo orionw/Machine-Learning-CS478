@@ -44,7 +44,7 @@ class KNN(SupervisedLearner):
             new_feats = Matrix(features, 0, 0, features.rows, features.cols)
             self.perceptron = Perceptron()
             self.perceptron.train(new_feats, labels)
-            self.weights = self.perceptron.weights
+            self.weights = [(1 if np.isnan(value) else value) for value in self.perceptron.weights]
         self.feature_types = self.get_semantic_types(features)
         self.training_features = features
         self.training_labels = labels
@@ -122,9 +122,9 @@ class KNN(SupervisedLearner):
                 weight = abs(self.weights[index])
             else:
                 weight = 1
-            if value == float("inf") or point_row[index] == float("inf"):
+            if value == float("nan") or point_row[index] == float("nan") or np.isnan(value):
                 # with don't know values, default to max distance
-                sum_distance += (1 * weight)
+                sum_distance += (.75 * weight)
             elif self.feature_types[index] == "continuous":
                 sum_distance += (abs(value - point_row[index])) * weight
             else:
@@ -147,9 +147,12 @@ class KNN(SupervisedLearner):
             raise Exception
         return dist
 
-    def get_inverse_dist(self, distance_values):
+    def get_inverse_dist(self, distance_values, values=False):
         distance_values = np.array(list(distance_values))
-        return sum(1 / np.square(distance_values))
+        if values:
+            return 1 / np.square(distance_values)
+        else:
+            return sum(1 / np.square(distance_values))
 
     def get_predicted_value(self, k_points, k_labels):
         if self.regression:
@@ -161,9 +164,8 @@ class KNN(SupervisedLearner):
                 pred = sum(list(k_points.values()))/self.k
 
         else:
-            k_labels = self.get_labels_from_k_points(k_points)
             if self.weight_distance:
-                inverse_distance = self.get_inverse_dist(k_points.values())
+                inverse_distance = self.get_inverse_dist(k_points.values(), values=True)
                 pred = self.get_highest_label(inverse_distance, k_labels)
 
             else:
@@ -192,10 +194,10 @@ class KNN(SupervisedLearner):
         return labels
 
     def get_highest_label(self, inverse_distance, k_labels):
-        sum_distance = sum(inverse_distance)
+        sum_distance = inverse_distance.sum()
         class_output = np.zeros(self.training_labels.value_count(0))
         for index, label in enumerate(k_labels):
-            class_output[label] += inverse_distance[index]
+            class_output[int(label)] += inverse_distance[index]
 
         class_output /= sum_distance
         arg_max_class = np.argmax(class_output)
