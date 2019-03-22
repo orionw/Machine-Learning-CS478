@@ -29,14 +29,14 @@ class TestDecisionTree(TestCase):
     # train.load_arff("datasets/knn_test.arff")
 
     def test_complete(self):
-        self.learn = Cluster(type="HAC", k=5, link_type="complete")
+        self.learn = Cluster(type="K-Means", k=5, link_type="complete")
         # # 75/25 split
         # self.test.shuffle()
         # self.train.shuffle()
 
         features = Matrix(self.data, 0, 1, self.data.rows, self.data.cols - 2)
-        labels = Matrix(self.data, 0, self.data.cols - 1, self.data.rows, 1)
-
+        labels = Matrix(self.data, 0, self.data.cols - 1, self.data.rows, self.data.cols)
+        features.normalize()
         start_time = time.time()
         self.learn.train(features, labels)
         elapsed_time = time.time() - start_time

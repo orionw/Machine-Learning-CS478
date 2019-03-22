@@ -19,7 +19,7 @@ class KNN(SupervisedLearner):
 
     labels = []
 
-    def __init__(self, k: int = 9, distance_metric="minkowsky", weight_distance=False, use_perceptron=True):
+    def __init__(self, k: int = 1, distance_metric="minkowsky", weight_distance=False, use_perceptron=True):
         print("Initializing with a K of {}".format(k))
         self.weight_distance = weight_distance
         self.validation_set = False
@@ -126,13 +126,13 @@ class KNN(SupervisedLearner):
                 # with don't know values, default to max distance
                 sum_distance += (.75 * weight)
             elif self.feature_types[index] == "continuous":
-                sum_distance += (abs(value - point_row[index])) * weight
+                sum_distance += np.square((abs(value - point_row[index])) * weight)
             else:
                 # if not self.regression:
                 #     sum_distance = self.get_vdm(index, value, point_row[index])
                 # else:
                 # type is nominal, if they are the same add zero, otherwise add 1
-                diff = (1 - int(value == point_row[index]))  * weight
+                diff = (1 - int(value == point_row[index])) * weight
                 sum_distance += diff
 
 
@@ -161,7 +161,7 @@ class KNN(SupervisedLearner):
                 weighted = k_labels / np.square(list(k_points.values()))
                 pred = sum(weighted) / inverse_distance_sum
             else:
-                pred = sum(list(k_points.values()))/self.k
+                pred = sum(list(k_labels))/self.k
 
         else:
             if self.weight_distance:

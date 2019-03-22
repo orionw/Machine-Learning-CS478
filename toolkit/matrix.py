@@ -231,12 +231,12 @@ class Matrix:
     def column_min(self, col):
         """Get the min value in the specified column"""
         a = np.ma.masked_equal(self.col(col), self.MISSING).compressed()
-        return np.min(a)
+        return np.nanmin(a)
 
     def column_max(self, col):
         """Get the max value in the specified column"""
         a = np.ma.masked_equal(self.col(col), self.MISSING).compressed()
-        return np.max(a)
+        return np.nanmax(a)
 
     def most_common_value(self, col):
         """Get the most common value in the specified column"""
