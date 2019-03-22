@@ -50,9 +50,12 @@ class Cluster(SupervisedLearner):
                 prev_cluster_list.append([i])
             clusters = features.shape[0]
             self.distance_matrix = self.get_distance_matrix(features)
+            index = 0
             while clusters > self.k:
+                print("### Iteration {} ###".format(index))
+                index += 1
                 # while there are more clusters than we want - combined a cluster
-                clusters, prev_cluster_list, features = self.cluster_again(prev_cluster_list, features)
+                clusters, prev_cluster_list, features = self.cluster_again(prev_cluster_list, features, index)
                 self.cluster_map[clusters] = prev_cluster_list
 
         elif self.cluster_type == "K-Means":
@@ -164,7 +167,7 @@ class Cluster(SupervisedLearner):
             raise Exception
         return dist
 
-    def cluster_again(self, prev_cluster_list, features: pd.DataFrame):
+    def cluster_again(self, prev_cluster_list, features: pd.DataFrame, clustering_iteration=None):
         # find the next cluster to merge
         # if they're the same, try again
         merged_cluster = False
@@ -188,22 +191,33 @@ class Cluster(SupervisedLearner):
                 merged_cluster = True
 
         if self.link_type == "single":
+            cluster_indices = [first_to_merge, second_to_merge]
+            first_cluster = min(cluster_indices)
+            second_cluster = max(cluster_indices)
+            for col in range(self.distance_matrix.shape[1]):
+                # get the new min dist for the cluster
+                min_val = min(self.distance_matrix[first_cluster][col], self.distance_matrix[second_cluster][col])
+                # only do upper diagonal
+                if col <= first_cluster:
+                    continue
+                else:
+                    if col == second_cluster:
+                        self.distance_matrix[first_cluster][col] = float("inf")
+                    else:
+                        # set the first row to the min
+                        self.distance_matrix[first_cluster][col] = min_val
 
-            for row in range(self.distance_matrix.shape[0]):
-                self.distance_matrix[row][first_to_merge] = min(self.distance_matrix[row][first_to_merge],
-                                                                self.distance_matrix[row][second_to_merge])
-                self.distance_matrix[row][second_to_merge] = float("inf")
+                # remove this column from consideration
+                self.distance_matrix[second_cluster][col] = float("inf")
 
         elif self.link_type == "complete":
             for row in range(self.distance_matrix.shape[1]):
-                self.distance_matrix[first_to_merge][row] = max(self.distance_matrix[first_to_merge][row],
-                                                                self.distance_matrix[second_to_merge][row])
-                self.distance_matrix[second_to_merge][row] = float("inf")
+                self.distance_matrix[second_to_merge][0] = float("inf")
                 # self.distance_matrix[row][first_to_merge] = min(self.distance_matrix[row][first_to_merge],
                 #                                                 self.distance_matrix[row][second_to_merge])
                 # self.distance_matrix[row][second_to_merge] = float("inf")
 
-
+        # assert(self.distance_matrix[:, second_cluster]).sum() == self.distance_matrix.shape[1])
         # Start the merger
         print('#############################################3')
         print("Merged cluster {} with {}, value of {}: \n containing {} and {}".format(first_to_merge, second_to_merge,
