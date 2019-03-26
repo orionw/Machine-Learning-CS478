@@ -1,0 +1,9 @@
+@RELATION hac_test
+@ATTRIBUTE x1 continuous
+@ATTRIBUTE x2 continuous
+@data
+.8, .7
+-.1, .2
+.9, .8
+0, .2
+.2, .1

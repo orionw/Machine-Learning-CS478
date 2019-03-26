@@ -1,0 +1,9 @@
+@RELATION sil_test
+@ATTRIBUTE x1 continuous
+@ATTRIBUTE x2 continuous
+@data
+.8, .7
+.9, .8
+.6, .6
+0, .2
+.2, .1

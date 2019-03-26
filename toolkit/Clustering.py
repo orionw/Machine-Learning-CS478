@@ -19,7 +19,8 @@ class Cluster(SupervisedLearner):
 
     labels = []
 
-    def __init__(self, type="HAC", k=3, link_type="single"):
+    def __init__(self, type="HAC", k=3, link_type="single", use_median=False, random=True):
+        self.random = random
         if k < 1:
             print("Bad K value. Quitting")
             raise Exception
@@ -31,6 +32,7 @@ class Cluster(SupervisedLearner):
         self.k = k
         self.distance_matrix: np.ndarray
         self.link_type = link_type
+        self.use_median = use_median
 
 
 
@@ -76,6 +78,8 @@ class Cluster(SupervisedLearner):
                     new_means = True
 
 
+            self.clustering = clustering
+            self.total_sse = total_sse
             print("Done clustering")
 
     def print_centroid(self, row, string_name=None):
@@ -132,8 +136,10 @@ class Cluster(SupervisedLearner):
     def get_distance(self, row, point_row, dist_type="euclidean", dist_class="dist"):
         sum_distance = 0
         # make them into series
-        row = row[1]
-        point_row = point_row[1]
+        if type(row) == tuple:
+            row = row[1]
+        if type(point_row) == tuple:
+            point_row = point_row[1]
         if point_row.equals(row):
             # they're the same row
             if self.cluster_type == "K-Means":
@@ -150,7 +156,10 @@ class Cluster(SupervisedLearner):
                 # with don't know values, default to max distance
                 sum_distance += np.square(1)
             elif self.feature_types[index] == "continuous":
-                sum_distance += np.square(value - point_row[index])
+                # if dist_type == "euclidean":
+                sum_distance += np.square(abs(value - point_row[index]))
+                # else:
+                #     sum_distance += (abs(value - point_row[index]))
             else:
                 diff = (1 - int(value == point_row[index]))
                 sum_distance += np.square(diff)
@@ -194,21 +203,29 @@ class Cluster(SupervisedLearner):
             cluster_indices = [first_to_merge, second_to_merge]
             first_cluster = min(cluster_indices)
             second_cluster = max(cluster_indices)
-            for col in range(self.distance_matrix.shape[1]):
-                # get the new min dist for the cluster
-                min_val = min(self.distance_matrix[first_cluster][col], self.distance_matrix[second_cluster][col])
-                # only do upper diagonal
-                if col <= first_cluster:
-                    continue
+            for row in range(self.distance_matrix.shape[1]):
+                if row == first_cluster or row == second_cluster:
+                    pass
+                    # self.distance_matrix[second_cluster][row] = np.inf
+                    # self.distance_matrix[first_cluster][row] = np.inf
+                    # self.distance_matrix[row][second_cluster] = np.inf
+                    # self.distance_matrix[row][first_cluster] = np.inf
                 else:
-                    if col == second_cluster:
-                        self.distance_matrix[first_cluster][col] = float("inf")
+                    # get the new min dist for the cluster
+                    if row < first_cluster:
+                        min_val = min(self.distance_matrix[row][first_cluster], self.distance_matrix[row][second_cluster])
+                        self.distance_matrix[row][first_cluster] = min_val
+                        self.distance_matrix[row][second_cluster] = np.inf
+                    elif first_cluster < row < second_cluster:
+                        min_val = min(self.distance_matrix[first_cluster][row], self.distance_matrix[row][second_cluster])
+                        self.distance_matrix[first_cluster][row] = min_val
+                        self.distance_matrix[row][second_cluster] = np.inf
                     else:
-                        # set the first row to the min
-                        self.distance_matrix[first_cluster][col] = min_val
+                        # col is greater than both
+                        min_val = min(self.distance_matrix[first_cluster][row], self.distance_matrix[second_cluster][row])
+                        self.distance_matrix[first_cluster][row] = min_val
+                        self.distance_matrix[second_cluster][row] = np.inf
 
-                # remove this column from consideration
-                self.distance_matrix[second_cluster][col] = float("inf")
 
         elif self.link_type == "complete":
             for row in range(self.distance_matrix.shape[1]):
@@ -233,12 +250,20 @@ class Cluster(SupervisedLearner):
         return len(prev_cluster_list), prev_cluster_list, features
 
     def get_init_centroids(self, features):
-        means = []
-        for index, row in enumerate(features.iterrows()):
-            if index == self.k:
-                break
-            means.append(row)
+        if not self.random:
+            means = []
+            for index, row in enumerate(features.iterrows()):
+                if index == self.k:
+                    break
+                means.append(row)
+            return means
+        else:
+            means = []
+            means_df = features.sample(n=self.k)
+            for item in means_df.iterrows():
+                means.append(item)
         return means
+
 
     def reevaluate_centroid(self, means, features):
         clustering = [[] for x in range(len(means))]
@@ -260,7 +285,10 @@ class Cluster(SupervisedLearner):
     def find_centroids(self, clustering, features):
         new_mean_list = []
         for index, cluster in enumerate(clustering):
-            new_centroid = self.get_mean_pandas(features.iloc[cluster, :])
+            if not self.use_median:
+                new_centroid = self.get_mean_pandas(features.iloc[cluster, :])
+            else:
+                new_centroid = self.get_median_pandas(features.iloc[cluster, :])
             new_mean_list.append(tuple((index, new_centroid)))
 
 
@@ -274,17 +302,20 @@ class Cluster(SupervisedLearner):
         else:
             return False
 
-    def get_sse(self, clusters, features, centroids=None):
+    def get_sse(self, clusters, features, centroids=None, verbose=True):
         cluster_sse = []
         total_sse = 0
         for index_cluster, cluster in enumerate(clusters):
             if centroids is None:
-                print("Using given centroids")
+                if verbose:
+                    print("Creating centroids")
                 centroid = self.get_mean_pandas(features.iloc[cluster, :], index_cluster)
             else:
-                print("Using first centroids")
+                if verbose:
+                    print("Using given centroids")
                 centroid = centroids[index_cluster]
-            self.print_centroid(centroid, self.old_features.enum_to_str)
+            if verbose:
+                self.print_centroid(centroid, self.old_features.enum_to_str)
             sse = 0
             for row_num in cluster:
                 row = features.iloc[row_num, :]
@@ -297,15 +328,16 @@ class Cluster(SupervisedLearner):
             cluster_sse.append(sse)
             total_sse += sse
 
-        for index, cluster_ind_sse in enumerate(cluster_sse):
-            print("Cluster {}: {} => SSE: {}".format(index, clusters[index], cluster_ind_sse))
+        if verbose:
+            for index, cluster_ind_sse in enumerate(cluster_sse):
+                print("Cluster {}: {} => SSE: {}".format(index, clusters[index], cluster_ind_sse))
 
-        for index_row in range(features.shape[0]):
-            for index_cluster, cluster in enumerate(clusters):
-                if index_row in cluster:
-                    print("{}={} ".format(index_row, index_cluster), end="")
-            if not index_row % 10:
-                print("")
+            for index_row in range(features.shape[0]):
+                for index_cluster, cluster in enumerate(clusters):
+                    if index_row in cluster:
+                        print("{}={} ".format(index_row, index_cluster), end="")
+                if not index_row % 10:
+                    print("")
 
         # for index in range(features.shape[0]):
         #     for cluster_index, cluster in enumerate(clusters):
@@ -331,6 +363,21 @@ class Cluster(SupervisedLearner):
 
         mean_df = mean_df.append(new_df, ignore_index=True)
         return mean_df.iloc[0, :]
+
+    def get_median_pandas(self, df):
+        mean_df = pd.DataFrame(columns=df.columns)
+        new_df = {}
+        median = None
+        min_sse = float("inf")
+        for index, row in enumerate(df.iterrows()):
+            check_sse, _ = self.get_sse([list(range(0, df.shape[0]))], df, centroids=[row], verbose=False)
+            if type(check_sse) == list:
+                check_sse = check_sse[0]
+            if min_sse > check_sse:
+                min_sse = check_sse
+                median = row
+
+        return median[1]
 
     def get_init_sse(self, means, features):
         clustering = [[] for x in range(len(means))]
@@ -358,6 +405,49 @@ class Cluster(SupervisedLearner):
                     return name
         else:
             return mode[0]
+
+
+    def get_silhouette(self, clustering, features, dist_type="euclidean"):
+        points = [item for sublist in clustering for item in sublist]
+        sil_dicts = {}
+        for point in points:
+            min_b = float("inf")
+            for cluster in clustering:
+                if point in cluster:
+                    a_own_cluster = self.get_silhouette_cluster(point, cluster, features, dist_type)
+                else:
+                    b_other_cluster = self.get_silhouette_cluster(point, cluster, features, dist_type)
+                    if b_other_cluster < min_b:
+                        min_b = b_other_cluster
+            sil_dicts[point] = {"a": a_own_cluster, "b": min_b}
+
+        cluster_list = []
+        for cluster in clustering:
+            cluster_score = 0
+            for point in cluster:
+                score = (sil_dicts[point]["b"] - sil_dicts[point]["a"]) / max(sil_dicts[point]["a"], sil_dicts[point]["b"])
+                cluster_score += score
+            cluster_list.append(cluster_score / len(cluster))
+
+        print(cluster_list)
+        return cluster_list
+
+    def get_silhouette_cluster(self, point, cluster, features, dist_type="euclidean"):
+        diff = 0
+        same_cluster = False
+        for other_point in cluster:
+            if other_point == point:
+                same_cluster = True
+                continue
+            diff += self.get_distance(features.iloc[point, ], features.iloc[other_point, ], dist_type=dist_type)
+
+        ave_diff = diff / (len(cluster) - int(same_cluster))
+        return ave_diff
+
+
+
+
+
 
 
 
